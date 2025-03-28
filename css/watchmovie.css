@@ -1,0 +1,278 @@
+/* Watch Page Styles */
+.watch-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Video Player Section */
+.video-section {
+    position: relative;
+    background-color: black;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.video-player {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.video-player iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+/* Custom Video Controls */
+.video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.video-player:hover .video-controls {
+    opacity: 1;
+}
+
+.progress-container {
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    width: 45%; /* Example progress */
+}
+
+.time-display {
+    color: white;
+    font-size: 0.9rem;
+}
+
+.controls-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.controls-left, .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.video-controls button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.volume-slider {
+    width: 100px;
+    height: 4px;
+}
+
+/* Movie Info Panel */
+.movie-info-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: var(--card-light);
+    border-radius: 8px;
+}
+
+body.dark-mode .movie-info-panel {
+    background-color: var(--card-dark);
+}
+
+.movie-primary-info h1 {
+    margin-bottom: 0.5rem;
+}
+
+.movie-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.movie-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.quality {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Tabs Container */
+.tabs-container {
+    background-color: var(--card-light);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+body.dark-mode .tabs-container {
+    background-color: var(--card-dark);
+}
+
+.tabs {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    border-bottom: 2px solid transparent;
+}
+
+body.dark-mode .tab-btn {
+    color: var(--text-light);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    padding: 1rem 0;
+}
+
+.cast-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.cast-member {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cast-member img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+/* Next Up Section */
+.next-up {
+    background-color: var(--card-light);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+body.dark-mode .next-up {
+    background-color: var(--card-dark);
+}
+
+.next-episodes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.episode-card {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .episode-card {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.episode-card:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+}
+
+.episode-card img {
+    width: 160px;
+    height: 90px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.episode-info {
+    flex: 1;
+}
+
+.episode-info h4 {
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .movie-info-panel {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .action-buttons {
+        width: 100%;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .action-buttons button {
+        flex: 1;
+    }
+
+    .tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .cast-list {
+        grid-template-columns: 1fr;
+    }
+
+    .next-episodes {
+        grid-template-columns: 1fr;
+    }
+}

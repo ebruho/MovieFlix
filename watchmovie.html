@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieFlix - Watch Movie</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/watchmovie.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="dark-mode">
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>MovieFlix</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#" class="active">Movies</a></li>
+                <li><a href="#">TV Shows</a></li>
+                <li><a href="watchlist.html">Watchlist</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="watch-container">
+        <div class="video-section">
+            <div class="video-player">
+                <iframe 
+                    id="moviePlayer"
+                    src="https://youtu.be/HbCyAz0uKOw?t=19"
+                    frameborder="0"
+                    allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                ></iframe>
+                
+                <!-- Custom Video Controls -->
+                <!-- <div class="video-controls">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                        <div class="time-display">
+                            <span class="current-time">0:00</span>
+                            <span>/</span>
+                            <span class="total-time">2:30:00</span>
+                        </div>
+                    </div>
+                    <div class="controls-main">
+                        <div class="controls-left">
+                            <button class="play-pause">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="volume">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <input type="range" class="volume-slider" min="0" max="100" value="100">
+                        </div>
+                        <div class="controls-right">
+                            <button class="quality">
+                                <span>1080p</span>
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            <button class="fullscreen">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <div class="watch-content">
+            <div class="movie-info-panel">
+                <div class="movie-primary-info">
+                    <h1>Movie Title</h1>
+                    <div class="movie-meta">
+                        <span class="rating">
+                            <i class="fas fa-star"></i> 4.5
+                        </span>
+                        <span class="year">2024</span>
+                        <span class="duration">2h 30min</span>
+                        <span class="quality">HD</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-primary">
+                        <i class="fas fa-plus"></i> Add to Watchlist
+                    </button>
+                    <button class="btn-secondary">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+            </div>
+
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active">About</button>
+                    <button class="tab-btn">Episodes</button>
+                    <button class="tab-btn">More Like This</button>
+                </div>
+
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <h3>Synopsis</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        
+                        <h3>Cast & Crew</h3>
+                        <div class="cast-list">
+                            <div class="cast-member">
+                                <img src="https://via.placeholder.com/50" alt="Actor Name">
+                                <div class="cast-info">
+                                    <h4>Actor Name</h4>
+                                    <p>Character Name</p>
+                                </div>
+                            </div>
+                            <!-- More cast members -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-up">
+            <h3>Next Up</h3>
+            <div class="next-episodes">
+                <div class="episode-card">
+                    <img src="https://via.placeholder.com/160x90" alt="Next Episode">
+                    <div class="episode-info">
+                        <h4>Next Movie Title</h4>
+                        <p>Brief description of the next movie</p>
+                    </div>
+                </div>
+                <!-- More episode cards -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About MovieFlix</h4>
+                <p>Your ultimate destination for movie discovery and selection.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 MovieFlix. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

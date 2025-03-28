@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieFlix - My Watchlist</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/watchlist.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="dark-mode">
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>MovieFlix</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">TV Shows</a></li>
+                <li><a href="#" class="active">Watchlist</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search movies...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="watchlist-container">
+        <div class="watchlist-header">
+            <h2>My Watchlist</h2>
+            <div class="watchlist-controls">
+                <select class="sort-select">
+                    <option value="date-added">Date Added</option>
+                    <option value="title">Title</option>
+                    <option value="rating">Rating</option>
+                    <option value="release-date">Release Date</option>
+                </select>
+                <div class="view-toggle">
+                    <button class="active"><i class="fas fa-th-large"></i></button>
+                    <button><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="watchlist-stats">
+            <div class="stat-item">
+                <span class="stat-number">24</span>
+                <span class="stat-label">Total Movies</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">12</span>
+                <span class="stat-label">Watched</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">12</span>
+                <span class="stat-label">To Watch</span>
+            </div>
+        </div>
+
+        <div class="watchlist-grid">
+            <!-- Watchlist Item -->
+            <div class="watchlist-item">
+                <div class="watchlist-item-poster">
+                    <img src="./images/gundi.jpeg" alt="Movie Title">
+                    <div class="watchlist-item-actions">
+                        <button class="btn-watch"><i class="fas fa-play"></i></button>
+                        <button class="btn-remove"><i class="fas fa-trash"></i></button>
+                        <button class="btn-mark-watched"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+                <div class="watchlist-item-info">
+                    <h3>Movie Title</h3>
+                    <div class="movie-meta">
+                        <span class="rating"><i class="fas fa-star"></i> 4.5</span>
+                        <span class="year">2024</span>
+                    </div>
+                    <!-- <div class="progress-bar">
+                        <div class="progress" style="width: 78%"></div>
+                    </div>
+                    <span class="progress-text">45 minutes left</span> -->
+                </div>
+            </div>
+
+            <!-- More watchlist items (repeat structure) -->
+            <!-- You can duplicate the watchlist-item div for more movies -->
+        </div>
+
+        <div class="empty-watchlist" style="display: none;">
+            <i class="fas fa-film"></i>
+            <h3>Your watchlist is empty</h3>
+            <p>Start adding movies and shows you want to watch!</p>
+            <a href="index.html" class="btn-primary">Browse Movies</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About MovieFlix</h4>
+                <p>Your ultimate destination for movie discovery and selection.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 MovieFlix. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>
