@@ -12,11 +12,18 @@
     overflow: hidden;
 }
 
-.movie-backdrop {
+body.dark-mode .movie-backdrop {
     height: 400px;
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)),
     url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuFZ4_bv2OdMPbvTbbD0QuKa_QhG4bqFzfyw&s') center/cover;
 }
+
+.movie-backdrop {
+    height: 400px;
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)),
+    url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuFZ4_bv2OdMPbvTbbD0QuKa_QhG4bqFzfyw&s') center/cover;
+}
+
 
 .movie-header-content {
     display: flex;
@@ -34,6 +41,11 @@
 }
 
 .movie-info {
+    color: var(--text-dark);
+    flex: 1;
+}
+
+body.dark-mode .movie-info {
     color: var(--text-light);
     flex: 1;
 }
@@ -77,8 +89,13 @@
 }
 
 .btn-secondary {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-dark);
+}
+
+body.dark-mode .btn-secondary {
     background-color: rgba(255, 255, 255, 0.1);
-    color: white;
+    color: var(--text-light);
 }
 
 .movie-content {
@@ -112,6 +129,7 @@ body.dark-mode .movie-content section {
     width: 100%;
     border-radius: 50%;
     margin-bottom: 0.5rem;
+    object-fit: contain;
 }
 
 .details-grid {
@@ -126,6 +144,7 @@ body.dark-mode .movie-content section {
     padding: 1rem;
     border-radius: 4px;
 }
+
 
 body.dark-mode .detail-item {
     background-color: rgba(255, 255, 255, 0.05);
@@ -152,4 +171,6 @@ body.dark-mode .detail-item {
     .action-buttons {
         flex-direction: column;
     }
+
+    
 }
