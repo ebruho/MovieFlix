@@ -123,6 +123,8 @@ body.dark-mode .movie-content section {
 
 .cast-member {
     text-align: center;
+    max-width: 10rem;
+    object-fit: contain;
 }
 
 .cast-member img {
