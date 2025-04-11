@@ -176,8 +176,8 @@ body.dark-mode .hero p {
     overflow: hidden;
     transition: transform 0.3s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    max-width: 15em;
-    object-fit: contain;
+    max-width: 16rem;
+    object-fit: cover;
 }
 
 .movie-card:hover {
