@@ -181,6 +181,7 @@ body.dark-mode .action-bar{
     min-width: 200px;
     max-width: 400px;
     position: relative;
+    
 }
 
 /* body.dark-mode .search-box{
@@ -189,6 +190,11 @@ body.dark-mode .action-bar{
 
 .search-box input {
     padding-right: 40px;
+}
+
+body.dark-mode .search-box input{
+    background: #222;
+    color: #e3f2fd;
 }
 
 .search-box i {
@@ -336,6 +342,17 @@ body.dark-mode .table td{
     transition: all 0.3s ease;
 }
 
+body.dark-mode .page-link{
+    background: #141414;
+}
+
+.page-link:hover,
+.page-item.active .page-link {
+    background: linear-gradient(45deg, #c62828, #e50914);
+    color: white;
+}
+
+body.dark-mode
 .page-link:hover,
 .page-item.active .page-link {
     background: linear-gradient(45deg, #c62828, #e50914);

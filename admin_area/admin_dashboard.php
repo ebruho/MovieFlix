@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - MovieFlix</title>
-    
+
     <!-- CSS links -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/soundVibe3.png" type="image/x-icon">
@@ -13,10 +14,31 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="../css/admin_dashboard.css">
     <link rel="stylesheet" href="../css/admin_sidebar.css">
-    
+
     <style>
 
+a.btn {
+    background: linear-gradient(#e50914, #c62828);
+    color: white;
+    width: 8em;
+    /* outline: #e50914 3px 0  solid; */
+    border: #e50914 3px 0 solid;
+    padding: 10px 7px;
+    font-size: medium;
+    font-weight: 400;
+}
 
+a.btn:hover{
+    background: transparent;
+    color: #e50914;
+    border: 2px solid #c62828;
+    
+}
+
+a.btn:focus{
+    box-shadow: 0 0 0 0.2rem rgba(255, 82, 140, 0.15);
+
+}
     </style>
 </head>
 
@@ -30,7 +52,7 @@
             </button>
             <h4>MovieFlix Admin</h4>
         </div>
-        
+
         <nav class="nav-menu">
             <div class="nav-item">
                 <a href="admin_dashboard.html" class="nav-link active">
@@ -132,57 +154,34 @@
                 </div>
             </div>
         </div>
+        <!-- Operation buttons -->
+        <div class="recent-section">
+            <div class="section-header">
+                <h2 class="section-title">Operation buttons</h2>
+                <!-- <a href="#" class="view-all">View All</a> -->
+            </div>
+            <div class="d-flex justify-content-center align-item-center">
+                <div class="mx-1">
+                    <a href="admin_dashboard.php?add_genres" class="btn mx-1">Add Genres</a>
+                </div>
+                <div class="mx-1">
+                    <a href="#" class="btn mx-1">Genres</a>
+                </div>
+            </div>
+        </div>
 
         <!-- Recent Orders -->
         <div class="recent-section">
-            <div class="section-header">
-                <h2 class="section-title">Recent Orders</h2>
-                <a href="#" class="view-all">View All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Product</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#ORD-001</td>
-                            <td>John Doe</td>
-                            <td>SOUR - Olivia Rodrigo</td>
-                            <td>$19.99</td>
-                            <td><span class="status-badge status-completed">Completed</span></td>
-                            <td>2024-03-15</td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-002</td>
-                            <td>Jane Smith</td>
-                            <td>Midnights - Taylor Swift</td>
-                            <td>$24.99</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                            <td>2024-03-14</td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-003</td>
-                            <td>Mike Johnson</td>
-                            <td>= (Equals) - Ed Sheeran</td>
-                            <td>$18.99</td>
-                            <td><span class="status-badge status-cancelled">Cancelled</span></td>
-                            <td>2024-03-14</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <?php 
+                if(isset($_GET['add_genres'])){
+                    include('add_genres.php');
+                }
+            ?>
         </div>
     </div>
 
     <script src="../script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

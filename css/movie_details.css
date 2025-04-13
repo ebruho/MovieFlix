@@ -35,7 +35,7 @@ body.dark-mode .movie-backdrop {
 }
 
 .movie-poster img {
-    width: 300px;
+    width: 15rem;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
@@ -98,6 +98,15 @@ body.dark-mode .btn-secondary {
     color: var(--text-light);
 }
 
+.btn-warning{
+    padding: 1rem;
+    background: gold;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
 .movie-content {
     display: flex;
     flex-direction: column;
@@ -123,7 +132,7 @@ body.dark-mode .movie-content section {
 
 .cast-member {
     text-align: center;
-    max-width: 10rem;
+    max-width: 8rem;
     object-fit: contain;
 }
 
@@ -175,4 +184,103 @@ body.dark-mode .detail-item {
     }
 
     
+}
+
+
+
+
+/* movie_details.css */
+/* .btn-primary, .btn-secondary {
+    all: unset;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #ff4d4d;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+} */
+
+
+/* Custom Modal Styles */
+.custom-modal {
+    display: none; 
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+body.dark-mode .custom-modal{
+    background-color: rgba(0, 0, 0, 0.8);
+
+}
+
+.custom-modal-content {
+    background: #e3e3e3;
+    color: #000;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    text-align: center;
+}
+
+body.dark-mode .custom-modal-content{
+    background-color: #1c1c1c;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: #000;
+    cursor: pointer;
+}
+
+body.dark-mode .close-modal{
+    color: #fff;
+
+}
+
+.custom-modal textarea {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    resize: none;
+    background-color: #d1d1d1;
+    color: black;
+}
+
+body.dark-mode .custom-modal textarea{
+    background-color: #2a2a2a;
+    color: white;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.btn.gradient {
+    /* background: linear-gradient(to right, #ff4d4d, #ff9900); */
+    background: linear-gradient(to right, #e50914, #c62828);
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
 }

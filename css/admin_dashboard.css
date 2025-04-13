@@ -60,9 +60,29 @@ body.dark-mode .admin-title {
     align-items: center;
 }
 
-/* body.dark-mode .admin-actions{
-    color: #eee;
-} */
+
+a.btn {
+    background: linear-gradient(#e50914, #c62828);
+    color: white;
+    width: 8em;
+    /* outline: #e50914 3px 0  solid; */
+    border: #e50914 3px 0 solid;
+    padding: 10px 7px;
+    font-size: medium;
+    font-weight: 400;
+}
+
+a.btn:hover{
+    background: transparent;
+    color: #e50914;
+    border: 2px solid #c62828;
+    
+}
+
+a.btn:focus{
+    box-shadow: 0 0 0 0.2rem rgba(255, 82, 140, 0.15);
+
+}
 
         .stat-cards {
             display: grid;
@@ -203,3 +223,5 @@ body.dark-mode .admin-title {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
         }
+
+  
