@@ -365,6 +365,10 @@ body.dark-mode
     border: none;
 }
 
+body.dark-mode .modal-content{
+    background: #141414;
+}
+
 .modal-header {
     background: linear-gradient(45deg, #c62828, #e50914);
     color: white;
@@ -379,10 +383,52 @@ body.dark-mode
     margin-bottom: 1.5rem;
 }
 
+body.dark-mode .form-group input{
+    background: #222;
+    color: #e3f2fd;
+}
+
+
+body.dark-mode .form-group .form-select{
+    background: #222;
+    color: #e3f2fd;
+    border: 2px solid #2f2f2f;
+}
+
+.form-group .form-select:focus{
+    border: 2px solid #e50914;
+    box-shadow: 0 3px 0px rgba(255, 82, 140, 0.15),
+    0 -3px 0px rgba(255, 82, 140, 0.15),
+    3px 0 0px rgba(255, 82, 140, 0.15),
+    -3px 0 0px rgba(255, 82, 140, 0.15);
+
+}
+
+body.dark-mode .form-group .form-select:focus{
+    background: #222;
+    color: #e3f2fd;
+    border: 2px solid #e50914;
+    box-shadow: 0 3px 0px rgba(255, 82, 140, 0.15),
+    0 -3px 0px rgba(255, 82, 140, 0.15),
+    3px 0 0px rgba(255, 82, 140, 0.15),
+    -3px 0 0px rgba(255, 82, 140, 0.15);
+
+}
+
+body.dark-mode .form-group textarea{
+    background: #222;
+    color: #e3f2fd;
+    border: 2px solid #2f2f2f;
+}
+
 .form-label {
     font-weight: 500;
     color: #333;
     margin-bottom: 0.5rem;
+}
+
+body.dark-mode .form-label{
+    color: #ddd;
 }
 
 .form-control {
@@ -391,11 +437,22 @@ body.dark-mode
     padding: 0.8rem;
 }
 
+body.dark-mode .form-control{
+    border: 2px solid #2f2f2f;
+    background: #222;
+    color: #d1e7dd;
+}
+
 .form-control:focus {
     border-color: #e50914;
     box-shadow: 0 0 0 0.2rem rgba(255, 82, 140, 0.15);
 }
 
+body.dark-mode .form-control:focus{
+    border-color: #e50914;
+    box-shadow: 0 0 0 0.2rem rgba(255, 82, 140, 0.15);
+}
+/* 
 .artist-tag {
     display: inline-block;
     background-color: #d1e7dd;
@@ -411,7 +468,19 @@ body.dark-mode
     color: red;
     margin-left: 5px;
     cursor: pointer;
-}
+} */
+
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5em;
+        margin: 0.2em;
+        font-size: 0.9em;
+        border-radius: 0.5em;
+    }
+
+
 
 .primary-btn{
     background: #e50914;
