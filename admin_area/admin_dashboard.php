@@ -17,7 +17,7 @@
 
     <style>
 
-a.btn {
+.recent-section a.btn {
     background: linear-gradient(#e50914, #c62828);
     color: white;
     width: 8em;
@@ -28,14 +28,14 @@ a.btn {
     font-weight: 400;
 }
 
-a.btn:hover{
+.recent-section a.btn:hover{
     background: transparent;
     color: #e50914;
     border: 2px solid #c62828;
     
 }
 
-a.btn:focus{
+.recent-section a.btn:focus{
     box-shadow: 0 0 0 0.2rem rgba(255, 82, 140, 0.15);
 
 }
@@ -99,9 +99,9 @@ a.btn:focus{
         <div class="admin-header">
             <h1 class="admin-title">Dashboard</h1>
             <div class="admin-actions">
-                <a href="admin_notifications.html" class="btn btn-outline-secondary">
+                <button class="btn btn-outline-secondary">
                     <i class="fas fa-bell"></i>
-                </a>
+                </button>
                 <button class="btn btn-outline-secondary">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
@@ -162,10 +162,13 @@ a.btn:focus{
             </div>
             <div class="d-flex justify-content-center align-item-center">
                 <div class="mx-1">
-                    <a href="admin_dashboard.php?add_genres" class="btn mx-1">Add Genres</a>
+                    <a href="admin_dashboard.php?add_genres" class="btn  mx-1">Add Genres</a>
                 </div>
                 <div class="mx-1">
-                    <a href="#" class="btn mx-1">Genres</a>
+                    <a href="admin_dashboard.php?view_genres" class="btn  mx-1">View Genres</a>
+                </div>
+                <div class="mx-1">
+                    <a href="#" class="btn  mx-1">Actors</a>
                 </div>
             </div>
         </div>
@@ -175,6 +178,10 @@ a.btn:focus{
             <?php 
                 if(isset($_GET['add_genres'])){
                     include('add_genres.php');
+                }
+
+                if(isset($_GET['view_genres'])){
+                    include('view_genres.php');
                 }
             ?>
         </div>
