@@ -21,7 +21,7 @@ $users="CREATE TABLE IF NOT EXISTS Users (
         $pdo->exec($admins);
         
         $movie="CREATE TABLE IF NOT EXISTS Movie (
-            movie_id AERIAL PRIMARY KEY,
+            movie_id SERIAL PRIMARY KEY,
             movie_title VARCHAR(255),
             duration VARCHAR(255),
             movie_description VARCHAR(255),
@@ -35,20 +35,6 @@ $users="CREATE TABLE IF NOT EXISTS Users (
         )";
         $pdo->exec($movie);
 
-        $movieDirectorFK="ALTER TABLE Movie 
-                        ADD CONSTRAINT movie_director_fk
-                        FOREIGN KEY (director_id)
-                        REFERENCES Director(director_id)
-                        ON DELETE SET NULL)";
-                        $pdo->exec($movieDirectorFK);
-             
-                        $movieLanguageFK="ALTER TABLE Movie 
-                        ADD CONSTRAINT movie_movieLanguage_fk
-                        FOREIGN KEY (language_id)
-                        REFERENCES MovieLanguage(language_id)
-                        ON DELETE SET NULL)";
-                        $pdo->exec($movieLanguageFK);          
-
         $rating="CREATE TABLE IF NOT EXISTS Rating (
             rating_id SERIAL PRIMARY KEY,
             rating_num INT,
@@ -58,20 +44,7 @@ $users="CREATE TABLE IF NOT EXISTS Users (
         )";
         $pdo->exec($rating);
 
-        $ratingUsersFK="ALTER TABLE Rating
-                        ADD CONSTRAINT rating_users_fk
-                        FOREIGN KEY (user_id)
-                        REFERENCES Users(user_id)
-                        ON DELETE SET NULL)";
-                        $pdo->exec($ratingUsersFK);
-
-                        $ratingMovieFK="ALTER TABLE Rating
-                        ADD CONSTRAINT rating_movie_fk
-                        FOREIGN KEY (movie_id)
-                        REFERENCES Movie(movie_id)
-                        ON DELETE SET NULL)";
-                        $pdo->exec($ratingMovieFK);
-
+        
         $watchlist="CREATE TABLE IF NOT EXISTS Watchlist (
             watchlist_id SERIAL PRIMARY KEY,
             movie_id INT,
@@ -81,19 +54,6 @@ $users="CREATE TABLE IF NOT EXISTS Users (
         )";
         $pdo->exec($watchlist);
 
-        $watchlistUsersFK="ALTER TABLE Watchlist
-                        ADD CONSTRAINT watchlist_users_fk
-                        FOREIGN KEY (user_id)
-                        REFERENCES Users(user_id)
-                        ON DELETE SET NULL)";
-                        $pdo->exec($watchlistUsersFK);
-
-                        $watchlistMovieFK="ALTER TABLE Watchlist
-                        ADD CONSTRAINT watchlist_movie_fk
-                        FOREIGN KEY (movie_id)
-                        REFERENCES Movie(movie_id)
-                        ON DELETE SET NULL)";
-                        $pdo->exec($watchlistMovieFK);
         
         $actor="CREATE TABLE IF NOT EXISTS Actor (
             actor_id SERIAL PRIMARY KEY,
@@ -135,6 +95,48 @@ $language="CREATE TABLE IF NOT EXISTS MovieLanguage (
         $pdo->exec($movieGenre);
 
         echo "All tables created.";
+
+        $movieDirectorFK="ALTER TABLE Movie 
+        ADD CONSTRAINT movie_director_FK
+        FOREIGN KEY (director_id)
+        REFERENCES Director(director_id)
+        ON DELETE SET NULL";
+        $pdo->exec($movieDirectorFK);
+             
+        $movieLanguageFK="ALTER TABLE Movie 
+        ADD CONSTRAINT movie_movieLanguage_FK
+        FOREIGN KEY (language_id)
+        REFERENCES MovieLanguage(language_id)
+        ON DELETE SET NULL";
+        $pdo->exec($movieLanguageFK);  
+
+        $ratingUsersFK="ALTER TABLE Rating
+        ADD CONSTRAINT rating_users_FK
+        FOREIGN KEY (user_id)
+        REFERENCES Users(user_id)
+        ON DELETE SET NULL";
+        $pdo->exec($ratingUsersFK);
+
+        $ratingMovieFK="ALTER TABLE Rating
+        ADD CONSTRAINT rating_movie_FK
+        FOREIGN KEY (movie_id)
+        REFERENCES Movie(movie_id)
+        ON DELETE SET NULL";
+        $pdo->exec($ratingMovieFK);
+
+        $watchlistUsersFK="ALTER TABLE Watchlist
+        ADD CONSTRAINT watchlist_users_FK
+        FOREIGN KEY (user_id)
+        REFERENCES Users(user_id)
+        ON DELETE SET NULL";
+        $pdo->exec($watchlistUsersFK);
+
+        $watchlistMovieFK="ALTER TABLE Watchlist
+        ADD CONSTRAINT watchlist_movie_FK
+        FOREIGN KEY (movie_id)
+        REFERENCES Movie(movie_id)
+        ON DELETE SET NULL";
+        $pdo->exec($watchlistMovieFK);
 
         $fkcharacter="ALTER TABLE MovieCharacter
         ADD CONSTRAINT Character_Actor_FK
