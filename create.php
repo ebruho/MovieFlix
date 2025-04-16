@@ -67,45 +67,68 @@ $users="CREATE TABLE IF NOT EXISTS Users (
         $pdo->exec($actor);
 
         $director="CREATE TABLE IF NOT EXISTS Director (
-            director_id INT PRIMARY KEY,
+            director_id SERIAL PRIMARY KEY,
             director_name VARCHAR(255)
         )";
         $pdo->exec($director);
 
 $language="CREATE TABLE IF NOT EXISTS MovieLanguage (
-            language_id INT PRIMARY KEY,
+            language_id SERIAL PRIMARY KEY,
             language_name VARCHAR(255)
         )";
         $pdo->exec($language);
  
         $genre="CREATE TABLE IF NOT EXISTS Genre (
-            genre_id INT PRIMARY KEY,
+            genre_id SERIAL PRIMARY KEY,
             genre_name VARCHAR(255)
         )";
         $pdo->exec($genre);
- 
-        
 
         $character="CREATE TABLE IF NOT EXISTS MovieCharacter (
-            character_id INT PRIMARY KEY,
+            character_id SERIAL PRIMARY KEY,
             character_name VARCHAR(255),
             actor_id INT,
             movie_id INT
-            -- FOREIGN KEY (actor_id) REFERENCES Actor(actor_id),
-            -- FOREIGN KEY (movie_id) REFERENCES Movie(movie_id)
         )";
         $pdo->exec($character);
  
         $movieGenre="CREATE TABLE IF NOT EXISTS MovieGenre (
-            movieGenre_id INT PRIMARY KEY,
+            movieGenre_id SERIAL PRIMARY KEY,
             movie_id INT,
-            genre_id INT
-            -- FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
-            -- FOREIGN KEY (genre_id) REFERENCES Genre(genre_id)
+            genre_id INT 
         )";
         $pdo->exec($movieGenre);
 
         echo "All tables created.";
+
+        $fkcharacter="ALTER TABLE MovieCharacter
+        ADD CONSTRAINT Character_Actor_FK
+        FOREIGN KEY (actor_id) 
+        REFERENCES Actor(actor_id)
+        ON DELETE SET NULL";
+        $pdo->exec($fkcharacter);
+
+        $fkmoviecharacter="ALTER TABLE MovieCharacter
+        ADD CONSTRAINT Character_Movie_FK
+        FOREIGN KEY (movie_id) 
+        REFERENCES Movie(movie_id)
+        ON DELETE SET NULL";
+        $pdo->exec($fkmoviecharacter);
+
+        $fkgenre="ALTER TABLE MovieGenre
+        ADD CONSTRAINT MovieGenre_Genre_FK
+        FOREIGN KEY (genre_id)
+        REFERENCES Genre(genre_id)
+        ON DELETE SET NULL";
+        $pdo->exec($fkgenre);
+
+        $fkmoviegenre="ALTER TABLE MovieGenre 
+        ADD CONSTRAINT MovieGenre_Movie_FK 
+        FOREIGN KEY (movie_id) 
+        REFERENCES Movie(movie_id) 
+        ON DELETE SET NULL";
+        $pdo->exec($fkmoviegenre);
+
 } catch (PDOException $e) {
     echo "Error:" . $e->getMessage();
 }
