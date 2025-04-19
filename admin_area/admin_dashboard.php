@@ -39,6 +39,43 @@
     box-shadow: 0 0 0 0.2rem rgba(255, 82, 140, 0.15);
 
 }
+
+.top-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .item-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-list li:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .item-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -155,35 +192,71 @@
             </div>
         </div>
         <!-- Operation buttons -->
-        <div class="recent-section">
+        <!-- <div class="recent-section">
             <div class="section-header">
                 <h2 class="section-title">Operation buttons</h2>
-                <!-- <a href="#" class="view-all">View All</a> -->
+                 <a href="#" class="view-all">View All</a> 
             </div>
             <div class="d-flex justify-content-center align-item-center">
                 <div class="mx-1">
-                    <a href="admin_dashboard.php?add_genres" class="btn  mx-1">Add Genres</a>
+                    <a href="admin_dashboard.php?add_genres" class="btn  mx-1">Top Movies</a>
                 </div>
                 <div class="mx-1">
-                    <a href="admin_dashboard.php?view_genres" class="btn  mx-1">View Genres</a>
+                    <a href="admin_dashboard.php?view_genres" class="btn  mx-1">Top User</a>
                 </div>
                 <div class="mx-1">
-                    <a href="#" class="btn  mx-1">Actors</a>
+                    <a href="#" class="btn  mx-1"></a>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Recent Orders -->
         <div class="recent-section">
-            <?php 
-                if(isset($_GET['add_genres'])){
-                    include('add_genres.php');
-                }
+        <div class="top-items">
+            <div class="report-section">
+                <div class="section-header">
+                    <h2 class="section-title">Most Watched Movie</h2>
+                </div>
+                <ul class="item-list">
+                    <li>
+                        <div class="item-info">
+                            <img src="../images/minecraft.jpeg" alt="Album" class="item-image">
+                            <div>
+                                <div class="fw-bold">MineCraft</div>
+                                <small class="text-muted">Jared Hess</small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold"><i class="fa fa-star"></i> 4.5</div>
+                            <small class="text-muted">$7,040</small>
+                        </div>
+                    </li>
+                    <!-- Add more items -->
+                </ul>
+            </div>
 
-                if(isset($_GET['view_genres'])){
-                    include('view_genres.php');
-                }
-            ?>
+
+            <div class="report-section">
+                <div class="section-header">
+                    <h2 class="section-title">Top User</h2>
+                </div>
+                <ul class="item-list">
+                    <li>
+                        <div class="item-info">
+                            <img src="../images/olivia.jpeg" alt="User" class="item-image">
+                            <div>
+                                <div class="fw-bold">Olivia Rodrigo</div>
+                                <small class="text-muted">email@example.com</small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">23 Watched</div>
+                            <small class="text-success">Loyal Customer</small>
+                        </div>
+                    </li>
+                    <!-- Add more customers -->
+                </ul>
+            </div>
         </div>
     </div>
 

@@ -1,10 +1,37 @@
+<?php 
+include('../config.php');
+
+    $title=$_POST['title'] ?? '';
+    $genres=explode(",", $_POST['genres'] ?? '');
+    $actors = explode(",", $_POST['actors'] ?? '');
+    $roles = explode(",", $_POST['roles'] ?? '');
+    $languages = explode(",", $_POST['languages'] ?? '');
+    $directors = explode(",", $_POST['directors'] ?? '');
+
+    $link = $_POST['link'] ?? '';
+    $keywords = $_POST['keywords'] ?? '';
+    $duration = $_POST['duration'] ?? '';
+    $budget = $_POST['budget'] ?? '';
+    $releaseDate = $_POST['release_date'] ?? '';
+    $description = $_POST['description'] ?? '';
+
+    // Обработка на снимка
+    $coverPath = '';
+    if (isset($_FILES['cover']) && $_FILES['cover']['error'] === 0) {
+        $uploadDir = 'uploads/';
+        $coverPath = $uploadDir . basename($_FILES['cover']['name']);
+        move_uploaded_file($_FILES['cover']['tmp_name'], $coverPath);
+    }
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - MovieFlix</title>
+    <title>Admin Movies - MovieFlix</title>
 
     <!-- CSS links -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -116,12 +143,12 @@
                             <!-- <th>
                                 <input type="checkbox" class="form-check-input">
                             </th> -->
-                            <th>Stock ID</th>
-                            <th>Album Title</th>
-                            <th>Stock Image</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Total Sold</th>
+                            <th>Movie ID</th>
+                            <th>Movie Title</th>
+                            <th>Movie Image</th>
+                            <th>Actors</th>
+                            <th>Genres</th>
+                            <th>Director</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -131,7 +158,7 @@
                                 <input type="checkbox" class="form-check-input">
                             </td> -->
                             <td>#ALB001</td>
-                            <td>SOUR</td>
+                            <td><?php echo $title; ?></td>
                             <td><img src="../images/minecraft.jpeg" alt="Album Cover"></td>
                             <td>$19.99</td>
                             <td><span class="stock-status in-stock">In Stock</span></td>
@@ -183,18 +210,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="movieForm">
+                <form id="movieForm" method="POST" action="add_movie.php" enctype="multipart/form-data">
                     <div class="row g-3">
 
                         <!-- Title -->
                         <div class="col-md-6">
-                            <label class="form-label">Movie Title</label>
-                            <input type="text" class="form-control" required>
+                            <label class="form-label" for="title">Movie Title</label>
+                            <input type="text" class="form-control" name="title" id="title" required>
                         </div>
 
                         <!-- Genres (multiple) -->
                         <div class="col-md-6">
-                            <label class="form-label">Genres</label>
+                            <label class="form-label" for="genresInput">Genres</label>
                             <input list="genresOptions" id="genresInput" class="form-control">
                             <datalist id="genresOptions">
                                 <option value="Comedy">
@@ -209,7 +236,7 @@
 
                         <!-- Actors (multiple) -->
                         <div class="col-md-6">
-                            <label class="form-label">Actors</label>
+                            <label class="form-label" for="actorsInput">Actors</label>
                             <input list="actorsOptions" id="actorsInput" class="form-control">
                             <datalist id="actorsOptions">
                                 <option value="Olivia Rodrigo">
@@ -223,7 +250,7 @@
 
                         <!-- Roles (multiple) -->
                         <div class="col-md-6">
-                            <label class="form-label">Roles</label>
+                            <label class="form-label" id="rolesInput">Roles</label>
                             <input list="rolesOptions" id="rolesInput" class="form-control">
                             <datalist id="rolesOptions">
                                 <option value="Lead">
@@ -237,7 +264,7 @@
 
                         <!-- Languages (multiple) -->
                         <div class="col-md-6">
-                            <label class="form-label">Languages</label>
+                            <label class="form-label" id="languagesInput">Languages</label>
                             <input list="languagesOptions" id="languagesInput" class="form-control">
                             <datalist id="languagesOptions">
                                 <option value="English">
@@ -251,7 +278,7 @@
 
                         <!-- Directors (multiple) -->
                         <div class="col-md-6">
-                            <label class="form-label">Directors</label>
+                            <label class="form-label" for="directorsInput">Directors</label>
                             <input list="directorsOptions" id="directorsInput" class="form-control">
                             <datalist id="directorsOptions">
                                 <option value="Christopher Nolan">
@@ -265,38 +292,38 @@
 
                         <!-- Other fields -->
                         <div class="col-md-6">
-                            <label class="form-label">Link</label>
-                            <input type="text" class="form-control" required>
+                            <label class="form-label" for="link">Link</label>
+                            <input type="text" class="form-control" name="link" id="link" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Keywords</label>
-                            <input type="text" class="form-control" required>
+                            <label class="form-label" for="keywords">Keywords</label>
+                            <input type="text" class="form-control" name="keywords" id="keywords" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Duration (minutes)</label>
-                            <input type="number" class="form-control" required>
+                            <label class="form-label" for="duration">Duration (minutes)</label>
+                            <input type="number" class="form-control" name="duration" id="duration" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Budget</label>
-                            <input type="number" class="form-control" required>
+                            <label class="form-label" for="budget">Budget</label>
+                            <input type="number" class="form-control" name="budget" id="budget" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Release Date</label>
-                            <input type="date" class="form-control" required>
+                            <label class="form-label" for="release_date">Release Date</label>
+                            <input type="date" class="form-control" name="release_date" id="release" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Movie Cover</label>
-                            <input type="file" class="form-control" accept="image/*" required>
+                            <label class="form-label" for="cover">Movie Cover</label>
+                            <input type="file" class="form-control" name="cover" id="cover" accept="images/*" required>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" rows="3"></textarea>
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control" name="description" id="description" rows="3"></textarea>
                         </div>
 
                     </div>
@@ -304,7 +331,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn secondary-btn" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn primary-btn">Save Movie</button>
+                <button type="submit" class="btn primary-btn" >Save Movie</button>
             </div>
         </div>
     </div>

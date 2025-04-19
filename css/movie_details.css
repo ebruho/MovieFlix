@@ -107,6 +107,11 @@ body.dark-mode .btn-secondary {
     border-radius: 3px;
 }
 
+.back-btn{
+    color: #e50914;background: rgba(229, 9, 20, 0.2);
+
+}
+
 .movie-content {
     display: flex;
     flex-direction: column;
