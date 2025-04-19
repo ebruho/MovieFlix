@@ -275,4 +275,35 @@ body.dark-mode .episode-card {
     .next-episodes {
         grid-template-columns: 1fr;
     }
+
+}
+
+
+.btn-primary{
+    background: #e50914;
+    padding: 0.7rem;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-secondary{
+    background:  rgba(100, 100, 100, 0.5);;
+    padding: 0.7rem;
+    /* border: solid #e50914; */
+    border: none;
+    color: #141414;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-secondary:hover{
+    /* background: ; */
+    box-shadow: 0 5px 15px  rgba(229, 9, 20, 0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 5px 15px  rgba(229, 9, 20, 0.3);
+
 }
