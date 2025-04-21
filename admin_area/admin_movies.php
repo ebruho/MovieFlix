@@ -1,30 +1,27 @@
-<?php 
-include('../config.php');
+<?php
+include "../config.php";
 
-    $title=$_POST['title'] ?? '';
-    $genres=explode(",", $_POST['genres'] ?? '');
-    $actors = explode(",", $_POST['actors'] ?? '');
-    $roles = explode(",", $_POST['roles'] ?? '');
-    $languages = explode(",", $_POST['languages'] ?? '');
-    $directors = explode(",", $_POST['directors'] ?? '');
+// Вземаме всички филми с нужните JOIN-и
+$query = "
+    SELECT 
+        m.movie_id,
+        m.movie_title,
+        m.movie_img,
+        m.budget,
+        d.director_name,
+        STRING_AGG(g.genre_name, ', ') AS genres
+    FROM Movie m
+    LEFT JOIN Director d ON m.director_id = d.director_id
+    LEFT JOIN MovieGenre mg ON m.movie_id = mg.movie_id
+    LEFT JOIN Genre g ON mg.genre_id = g.genre_id
+    GROUP BY m.movie_id, m.movie_title, m.movie_img, m.budget, d.director_name
+    ORDER BY m.movie_id DESC
+";
 
-    $link = $_POST['link'] ?? '';
-    $keywords = $_POST['keywords'] ?? '';
-    $duration = $_POST['duration'] ?? '';
-    $budget = $_POST['budget'] ?? '';
-    $releaseDate = $_POST['release_date'] ?? '';
-    $description = $_POST['description'] ?? '';
-
-    // Обработка на снимка
-    $coverPath = '';
-    if (isset($_FILES['cover']) && $_FILES['cover']['error'] === 0) {
-        $uploadDir = 'uploads/';
-        $coverPath = $uploadDir . basename($_FILES['cover']['name']);
-        move_uploaded_file($_FILES['cover']['tmp_name'], $coverPath);
-    }
-
-
+$stmt = $pdo->query($query);
+$movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -146,36 +143,36 @@ include('../config.php');
                             <th>Movie ID</th>
                             <th>Movie Title</th>
                             <th>Movie Image</th>
-                            <th>Actors</th>
+                            <th>Budget</th>
                             <th>Genres</th>
                             <th>Director</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <!-- <td>
-                                <input type="checkbox" class="form-check-input">
-                            </td> -->
-                            <td>#ALB001</td>
-                            <td><?php echo $title; ?></td>
-                            <td><img src="../images/minecraft.jpeg" alt="Album Cover"></td>
-                            <td>$19.99</td>
-                            <td><span class="stock-status in-stock">In Stock</span></td>
-                            <td>150</td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="action-btn edit-btn" title="Edit" data-bs-toggle="modal"
-                                        data-bs-target="#addAlbumModal">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete-btn" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Add more rows as needed -->
+                    <?php foreach ($movies as $movie): ?>
+                    <tr>
+                        <td>#<?= htmlspecialchars($movie['movie_id']) ?></td>
+                        <td><?= htmlspecialchars($movie['movie_title']) ?></td>
+                        <td>
+                            <img src="./uploads/<?= htmlspecialchars($movie['movie_img']) ?>" alt="Movie Cover" width="60">
+                        </td>
+                        <td>$<?= number_format($movie['budget'], 2) ?></td>
+                        <td><?= htmlspecialchars($movie['genres']) ?></td>
+                        <td><?= htmlspecialchars($movie['director_name']) ?></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+
                     </tbody>
                 </table>
             </div>
@@ -250,7 +247,7 @@ include('../config.php');
 
                         <!-- Roles (multiple) -->
                         <div class="col-md-6">
-                            <label class="form-label" id="rolesInput">Roles</label>
+                            <label class="form-label" for="rolesInput">Roles</label>
                             <input list="rolesOptions" id="rolesInput" class="form-control">
                             <datalist id="rolesOptions">
                                 <option value="Lead">
@@ -264,7 +261,7 @@ include('../config.php');
 
                         <!-- Languages (multiple) -->
                         <div class="col-md-6">
-                            <label class="form-label" id="languagesInput">Languages</label>
+                            <label class="form-label" for="languagesInput">Languages</label>
                             <input list="languagesOptions" id="languagesInput" class="form-control">
                             <datalist id="languagesOptions">
                                 <option value="English">
@@ -327,12 +324,13 @@ include('../config.php');
                         </div>
 
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn secondary-btn" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn primary-btn" >Save Movie</button>
+                    </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn secondary-btn" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn primary-btn" >Save Movie</button>
-            </div>
+            
         </div>
     </div>
 </div>
@@ -395,8 +393,8 @@ include('../config.php');
     setupMultiInput("genresInput", "selectedGenres", "genresField");
     setupMultiInput("actorsInput", "selectedActors", "actorsField");
     setupMultiInput("rolesInput", "selectedRoles", "rolesField");
-    // setupMultiInput("languagesInput", "selectedLanguages", "languagesField");
-    // setupMultiInput("directorsInput", "selectedDirectors", "directorsField");
+    setupMultiInput("languagesInput", "selectedLanguages", "languagesField");
+    setupMultiInput("directorsInput", "selectedDirectors", "directorsField");
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

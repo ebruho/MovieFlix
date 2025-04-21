@@ -38,7 +38,7 @@ $users="CREATE TABLE IF NOT EXISTS Users (
         $rating="CREATE TABLE IF NOT EXISTS Rating (
             rating_id SERIAL PRIMARY KEY,
             rating_num INT,
-            comments VARCHAR(255),
+            comments TEXT,
             user_id INT,
             movie_id INT
         )";
@@ -64,6 +64,7 @@ $users="CREATE TABLE IF NOT EXISTS Users (
         $director="CREATE TABLE IF NOT EXISTS Director (
             director_id SERIAL PRIMARY KEY,
             director_name VARCHAR(255)
+
         )";
         $pdo->exec($director);
 
@@ -166,8 +167,13 @@ $language="CREATE TABLE IF NOT EXISTS MovieLanguage (
         ON DELETE SET NULL";
         $pdo->exec($fkmoviegenre);
 
+        $budgetIncreaseValue="ALTER TABLE Movie ALTER COLUMN budget TYPE NUMERIC(10, 2)";
+
+
 } catch (PDOException $e) {
     echo "Error:" . $e->getMessage();
 }
+
+
 
 ?>
