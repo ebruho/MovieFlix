@@ -92,19 +92,19 @@
 
         <nav class="nav-menu">
             <div class="nav-item">
-                <a href="admin_dashboard.html" class="nav-link active">
+                <a href="admin_dashboard.php" class="nav-link active">
                     <i class="fas fa-home"></i>
                     Dashboard
                 </a>
             </div>
             <div class="nav-item">
-                <a href="albums.html" class="nav-link">
+                <a href="admin_movies.php" class="nav-link">
                     <i class="fa-solid fa-film"></i>
                     Movies
                 </a>
             </div>
             <div class="nav-item">
-                <a href="users.html" class="nav-link">
+                <a href="admin_users.html" class="nav-link">
                     <i class="fas fa-users"></i>
                     Users
                 </a>

@@ -1,4 +1,8 @@
 /* Movie Details Page Styles */
+/* body{
+    overflow-x: hidden;
+} */
+
 .movie-details {
     max-width: 1200px;
     margin: 0 auto;

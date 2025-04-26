@@ -1,3 +1,7 @@
+<?php 
+include "config.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,9 +21,10 @@
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
+                <li><a href="./index.php" class="active">Home</a></li>
                 <li><a href="#">Movies</a></li>
-                <li><a href="#">TV Shows</a></li>
+                <li><a href="#">Register</a></li>
+                <li><a href="#">Contact</a></li>
                 <li><a href="#">Watchlist</a></li>
             </ul>
             <div class="nav-actions">
@@ -33,6 +38,9 @@
                     </form>
                 </div>
             </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Login</a></li>
+            </ul>
         </nav>
     </header>
 
@@ -47,47 +55,42 @@
             <h3>Featured Movies</h3>
             <div class="movie-grid">
                 <!-- Movie cards will be added here -->
-                <div class="movie-card">
+
+                <!-- <div class="movie-card">
                     <img src="./images/minecraft.jpeg" alt="Movie poster">
                     <div class="movie-info">
                         <h4>Movie Title</h4>
                         <span class="rating">⭐ 4.5</span>
                     </div>
-                </div>
+                </div> -->
 
+                <?php 
+                    $movie_query="
+                        SELECT
+                            movie_id,
+                            movie_title,
+                            movie_img
+                        FROM movie
+                        ORDER BY random()
+                        LIMIT 5 OFFSET 0
 
+                    ";
+
+                    $movie_stmt = $pdo->query($movie_query);
+                    $movies = $movie_stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                <?php foreach($movies as $movie): ?>
                 <div class="movie-card">
-                    <img src="./images/gundi.jpeg" alt="Movie poster">
+                    <a href="movie_details.php?movie_id=<?php echo $movie['movie_id']; ?>">
+                        <img src="./admin_area/uploads/<?php echo htmlspecialchars($movie['movie_img']); ?>" alt="Movie poster">
+                    </a>
                     <div class="movie-info">
-                        <h4>Movie Title</h4>
+                        <h4><?php echo htmlspecialchars($movie['movie_title']); ?></h4>
                         <span class="rating">⭐ 4.5</span>
                     </div>
                 </div>
+                <?php endforeach; ?>
 
-                <div class="movie-card">
-                    <img src="./images/wicked.jpeg" alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div>
-
-                <div class="movie-card">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1_Z1uB6rBAN0BoGxs0Goua1BvTDoU6nzkow&s"
-                        alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div>
-
-                <div class="movie-card">
-                    <img src="./images/terrifier3.jpeg" alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div>
 
                 <!--  more movie cards -->
             </div>

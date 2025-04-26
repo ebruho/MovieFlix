@@ -32,7 +32,8 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- CSS links -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="../images/soundVibe3.png" type="image/x-icon">
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -41,7 +42,17 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <style>
 
-        
+/* .dataTables_filter,
+.dataTables_paginate {
+    display: none !important;
+} */
+
+.dataTables_wrapper .dataTables_paginate {
+     display: flex;
+     justify-content: center;
+ }
+ 
+
     </style>
 </head>
 
@@ -58,19 +69,19 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <nav class="nav-menu">
             <div class="nav-item">
-                <a href="admin_dashboard.html" class="nav-link">
+                <a href="admin_dashboard.php" class="nav-link">
                     <i class="fas fa-home"></i>
                     Dashboard
                 </a>
             </div>
             <div class="nav-item">
-                <a href="albums.html" class="nav-link active">
+                <a href="admmin_movies.php" class="nav-link active">
                     <i class="fa-solid fa-film"></i>
                     Movies
                 </a>
             </div>
             <div class="nav-item">
-                <a href="users.html" class="nav-link">
+                <a href="admin_users.html" class="nav-link">
                     <i class="fas fa-users"></i>
                     Users
                 </a>
@@ -114,27 +125,21 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Action Bar -->
         <div class="action-bar">
             <div class="search-box">
-                <input type="text" class="form-control" placeholder="Search albums...">
+                <input type="text" class="form-control" id="customSearch" placeholder="Search movies...">
                 <i class="fas fa-search"></i>
             </div>
-            <!-- <div class="bulk-actions">
-                <select class="form-select bulk-select">
-                    <option>Bulk Actions</option>
-                    <option>Delete Selected</option>
-                    <option>Update Stock</option>
-                </select>
-                <button class="btn btn-primary">Apply</button>
-            </div> -->
+
+
             <button class="add-album-btn" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
                 <i class="fas fa-plus"></i>
                 Add New Album
             </button>
         </div>
 
-        <!-- Albums Table -->
+        <!-- Movies Table -->
         <div class="movies-table">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table" id="moviesTable">
                     <thead>
                         <tr>
                             <!-- <th>
@@ -178,7 +183,7 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Page navigation">
+            <!-- <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Previous">
@@ -194,9 +199,26 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                     </li>
                 </ul>
-            </nav>
+            </nav> -->
         </div>
     </div>
+
+    <?php 
+         $char_query = "
+                    SELECT 
+                      DISTINCT character_name
+                    FROM moviecharacter
+                    ORDER BY character_name
+                    ";
+        $stmt = $pdo->query($char_query);
+        $char_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $actor_stmt = $pdo->query("SELECT actor_name FROM actor ORDER BY actor_name");
+        $actors = $actor_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $genre_stmt = $pdo->query("SELECT genre_name FROM genre ORDER BY genre_name");
+        $genres = $genre_stmt->fetchAll(PDO::FETCH_ASSOC);
+    ?>
 
     <!-- Add/Edit Movie Modal -->
 <div class="modal fade" id="addAlbumModal" tabindex="-1">
@@ -221,11 +243,14 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label class="form-label" for="genresInput">Genres</label>
                             <input list="genresOptions" id="genresInput" class="form-control">
                             <datalist id="genresOptions">
-                                <option value="Comedy">
+                                <?php foreach($genres as $genre): ?>
+                                    <option value="<?= htmlspecialchars($genre['genre_name']) ?>">
+                                <?php endforeach; ?>
+                                <!-- <option value="Comedy">
                                 <option value="Horror">
                                 <option value="Drama">
                                 <option value="Musical">
-                                <option value="Action">
+                                <option value="Action"> -->
                             </datalist>
                             <div id="selectedGenres" class="mt-2"></div>
                             <input type="hidden" name="genres" id="genresField">
@@ -236,10 +261,13 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label class="form-label" for="actorsInput">Actors</label>
                             <input list="actorsOptions" id="actorsInput" class="form-control">
                             <datalist id="actorsOptions">
-                                <option value="Olivia Rodrigo">
+                                <?php foreach($actors as $actor): ?>
+                                <option value="<?= htmlspecialchars($actor['actor_name']) ?>">
+                                <?php endforeach; ?>
+                                <!-- <option value="Olivia Rodrigo">
                                 <option value="Tate McRay">
                                 <option value="Sabrina Carpenter">
-                                <option value="Ariana Grande">
+                                <option value="Ariana Grande"> -->
                             </datalist>
                             <div id="selectedActors" class="mt-2"></div>
                             <input type="hidden" name="actors" id="actorsField">
@@ -250,10 +278,13 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label class="form-label" for="rolesInput">Roles</label>
                             <input list="rolesOptions" id="rolesInput" class="form-control">
                             <datalist id="rolesOptions">
-                                <option value="Lead">
+                                <?php foreach($char_rows as $row): ?>
+                                <option value="<?= htmlspecialchars($row['character_name']) ?>">
+                                <?php endforeach; ?>
+                                <!-- <option value="Lead">
                                 <option value="Supporting">
                                 <option value="Villain">
-                                <option value="Guest">
+                                <option value="Guest"> -->
                             </datalist>
                             <div id="selectedRoles" class="mt-2"></div>
                             <input type="hidden" name="roles" id="rolesField">
@@ -401,6 +432,45 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="../script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery (необходим за DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+
+
+
+$(document).ready(function () {
+    const table = $('#moviesTable').DataTable({
+        "pageLength": 10,
+        "order": [[0, "desc"]],
+        paging: true,
+        // language: {
+        //     url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/bg-BG.json"
+        // }
+        "dom": '<"top"i>rt<"bottom"p><"clear">', // махаме вградената търсачка ('f') и ни оставя само таблицата (t) и пагинацията (p)
+        "pagingType": "simple", // само стрелки наляво и надясно, ако предпочиташ номера — използвай "simple_numbers"
+        pagingType: "simple_numbers", // за да имаме номера и стрелки
+        language: {
+            paginate: {
+                previous: '<i class="fas fa-chevron-left"></i>',
+                next:     '<i class="fas fa-chevron-right"></i>'
+            }
+        }
+    });
+
+    // Свържи търсачка
+    $('#customSearch').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+});
+
+</script>
+
 </body>
 
 </html>
