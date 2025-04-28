@@ -2,21 +2,37 @@
 include "../config.php";
 
 // Вземаме всички филми с нужните JOIN-и
+
 $query = "
     SELECT 
         m.movie_id,
         m.movie_title,
         m.movie_img,
         m.budget,
+        m.movie_link,
+        m.keywords,
+        m.duration,
+        m.release_year,
+        m.movie_description,
         d.director_name,
-        STRING_AGG(g.genre_name, ', ') AS genres
+        ml.language_name,
+        STRING_AGG(DISTINCT g.genre_name, ', ') AS genres,
+        STRING_AGG(DISTINCT a.actor_name, ', ') AS actors,
+        STRING_AGG(DISTINCT mc.character_name, ', ') AS characters
     FROM Movie m
     LEFT JOIN Director d ON m.director_id = d.director_id
     LEFT JOIN MovieGenre mg ON m.movie_id = mg.movie_id
     LEFT JOIN Genre g ON mg.genre_id = g.genre_id
-    GROUP BY m.movie_id, m.movie_title, m.movie_img, m.budget, d.director_name
+    LEFT JOIN MovieCharacter mc ON m.movie_id = mc.movie_id
+    LEFT JOIN Actor a ON mc.actor_id = a.actor_id
+    LEFT JOIN MovieLanguage ml ON m.language_id = ml.language_id
+    GROUP BY 
+        m.movie_id, m.movie_title, m.movie_img, m.budget, 
+        m.movie_link, m.keywords, m.duration, m.release_year, m.movie_description,
+        d.director_name, ml.language_name
     ORDER BY m.movie_id DESC
 ";
+
 
 $stmt = $pdo->query($query);
 $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -132,7 +148,7 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <button class="add-album-btn" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
                 <i class="fas fa-plus"></i>
-                Add New Album
+                Add New Movie
             </button>
         </div>
 
@@ -166,14 +182,37 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($movie['genres']) ?></td>
                         <td><?= htmlspecialchars($movie['director_name']) ?></td>
                         <td>
-                            <div class="action-btns">
-                                <button class="action-btn edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-btn" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
+                        <div class="action-btns">
+                        <button class="action-btn edit-btn" 
+    title="Edit" 
+    data-bs-toggle="modal" 
+    data-bs-target="#editMovieModal"
+    data-id="<?= $movie['movie_id']; ?>"
+    data-title="<?= htmlspecialchars($movie['movie_title']); ?>"
+    data-budget="<?= $movie['budget']; ?>"
+    data-link="<?= isset($movie['movie_link']) ? htmlspecialchars($movie['movie_link']) : ''; ?>"
+    data-keywords="<?= isset($movie['keywords']) ? htmlspecialchars($movie['keywords']) : ''; ?>"
+    data-duration="<?= isset($movie['duration']) ? htmlspecialchars($movie['duration']) : ''; ?>"
+    data-release="<?= isset($movie['release_year']) ? htmlspecialchars($movie['release_year']) : ''; ?>"
+    data-description="<?= isset($movie['movie_description']) ? htmlspecialchars($movie['movie_description']) : ''; ?>"
+    data-actors="<?= isset($movie['actors']) ? htmlspecialchars($movie['actors']) : ''; ?>"
+    data-genres="<?= isset($movie['genres'])? htmlspecialchars($movie['genres']): ''; ?>"
+    data-characters="<?= isset($movie['characters'])? htmlspecialchars($movie['characters']): ''; ?>"
+data-languages="<?= isset($movie['language_name']) ? htmlspecialchars($movie['language_name']) : ''; ?>"
+data-directors="<?= isset($movie['director_name']) ? htmlspecialchars($movie['director_name']) : ''; ?>"
+data-cover="<?= isset($movie['movie_img']) ? htmlspecialchars($movie['movie_img']) : ''; ?>"
+
+
+>
+    <i class="fas fa-edit"></i>
+</button>
+
+    
+    <button class="action-btn delete-btn" title="Delete">
+        <i class="fas fa-trash"></i>
+    </button>
+</div>
+
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -183,23 +222,7 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <!-- Pagination -->
-            <!-- <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <i class="fas fa-chevron-left"></i>
-                        </a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </li>
-                </ul>
-            </nav> -->
+    
         </div>
     </div>
 
@@ -218,6 +241,12 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $genre_stmt = $pdo->query("SELECT genre_name FROM genre ORDER BY genre_name");
         $genres = $genre_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $language_stmt = $pdo->query("SELECT language_name FROM movielanguage ORDER BY language_name");
+        $languages = $language_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $director_stmt = $pdo->query("SELECT director_name FROM director ORDER BY director_name");
+        $directors = $director_stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
 
     <!-- Add/Edit Movie Modal -->
@@ -279,7 +308,7 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <input list="rolesOptions" id="rolesInput" class="form-control">
                             <datalist id="rolesOptions">
                                 <?php foreach($char_rows as $row): ?>
-                                <option value="<?= htmlspecialchars($row['character_name']) ?>">
+                                    <option value="<?= htmlspecialchars($row['character_name']) ?>">
                                 <?php endforeach; ?>
                                 <!-- <option value="Lead">
                                 <option value="Supporting">
@@ -295,10 +324,14 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label class="form-label" for="languagesInput">Languages</label>
                             <input list="languagesOptions" id="languagesInput" class="form-control">
                             <datalist id="languagesOptions">
-                                <option value="English">
+                                <?php foreach($languages as $language): ?>
+                                    <option value="<?= htmlspecialchars($language['language_name']);?>">
+                                <?php endforeach; ?>
+
+                                <!-- <option value="English">
                                 <option value="Spanish">
                                 <option value="French">
-                                <option value="Bulgarian">
+                                <option value="Bulgarian"> -->
                             </datalist>
                             <div id="selectedLanguages" class="mt-2"></div>
                             <input type="hidden" name="languages" id="languagesField">
@@ -309,10 +342,13 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label class="form-label" for="directorsInput">Directors</label>
                             <input list="directorsOptions" id="directorsInput" class="form-control">
                             <datalist id="directorsOptions">
-                                <option value="Christopher Nolan">
+                                <?php foreach($directors as $director){ ?>
+                                    <option value="<?= htmlspecialchars($director['director_name']);?>">
+                                <?php } ?>
+                                <!-- <option value="Christopher Nolan">
                                 <option value="Greta Gerwig">
                                 <option value="Steven Spielberg">
-                                <option value="Quentin Tarantino">
+                                <option value="Quentin Tarantino"> -->
                             </datalist>
                             <div id="selectedDirectors" class="mt-2"></div>
                             <input type="hidden" name="directors" id="directorsField">
@@ -340,8 +376,8 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label" for="release_date">Release Date</label>
-                            <input type="date" class="form-control" name="release_date" id="release" required>
+                            <label class="form-label" for="release_date">Release Year</label>
+                            <input type="number" class="form-control" name="release_date" id="release" required>
                         </div>
 
                         <div class="col-md-6">
@@ -365,6 +401,149 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
+
+
+
+
+<div class="modal fade" id="editMovieModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Movie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="movieForm" method="POST" action="update_movie.php" enctype="multipart/form-data">
+                    <input type="hidden" name="edit_movie_id" id="edit_movie_id">
+
+                    <div class="row g-3"> 
+
+                        <!-- Title -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit_title">Movie Title</label>
+                            <input type="text" class="form-control" name="edit_title" id="edit_title" required>
+                        </div>
+
+                        <!-- Genres (multiple) -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="editGenresInput">Genres</label>
+                            <input list="editGenresOptions" id="editGenresInput" class="form-control">
+                            <datalist id="editGenresOptions">
+                                <?php foreach($genres as $genre): ?>
+                                    <option value="<?= htmlspecialchars($genre['genre_name']) ?>">
+                                <?php endforeach; ?>
+                                
+                            </datalist>
+                            <div id="editSelectedGenres" class="mt-2"></div>
+                            <input type="hidden" name="edit_genres" id="editGenresField">
+                        </div>
+
+                        <!-- Actors (multiple) -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="editActorsInput">Actors</label>
+                            <input list="actorsOptions" id="editActorsInput" class="form-control">
+                            <datalist id="actorsOptions">
+                                <?php foreach($actors as $actor): ?>
+                                <option value="<?= htmlspecialchars($actor['actor_name']) ?>">
+                                <?php endforeach; ?>
+                                
+                            </datalist>
+                            <div id="editSelectedActors" class="mt-2"></div>
+                            <input type="hidden" name="edit_actors" id="editActorsField">
+                        </div>
+
+                        <!-- Roles (multiple) -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="editRolesInput">Roles</label>
+                            <input list="editRolesOptions" id="editRolesInput" class="form-control">
+                            <datalist id="editRolesOptions">
+                                <?php foreach($char_rows as $row): ?>
+                                <option value="<?= htmlspecialchars($row['character_name']) ?>">
+                                <?php endforeach; ?>
+                                
+                            </datalist>
+                            <div id="editSelectedRoles" class="mt-2"></div>
+                            <input type="hidden" name="edit_roles" id="editRolesField">
+                        </div>
+
+                        <!-- Languages (multiple) -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="editLanguagesInput">Languages</label>
+                            <input list="editLanguagesOptions" id="editLanguagesInput" class="form-control">
+                            <datalist id="editLanguagesOptions">
+                            <?php foreach($languages as $language): ?>
+                                    <option value="<?= htmlspecialchars($language['language_name']);?>">
+                            <?php endforeach; ?>
+                          
+                            </datalist>
+                            <div id="editSelectedLanguages" class="mt-2"></div>
+                            <input type="hidden" name="edit_languages" id="editLanguagesField">
+                        </div>
+
+                        <!-- Directors (multiple) -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="editDirectorsInput">Directors</label>
+                            <input list="editDirectorsOptions" id="editDirectorsInput" class="form-control">
+                            <datalist id="editDirectorsOptions">
+                            <?php foreach($directors as $director){ ?>
+                                    <option value="<?= htmlspecialchars($director['director_name']);?>">
+                            <?php } ?>
+                                
+                            </datalist>
+                            <div id="editSelectedDirectors" class="mt-2"></div>
+                            <input type="hidden" name="edit_directors" id="editDirectorsField">
+                        </div>
+
+                        <!-- Other fields -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit_link">Link</label>
+                            <input type="text" class="form-control" name="edit_link" id="edit_link" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit_keywords">Keywords</label>
+                            <input type="text" class="form-control" name="edit_keywords" id="edit_keywords" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit_duration">Duration (minutes)</label>
+                            <input type="number" class="form-control" name="edit_duration" id="edit_duration" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit_budget">Budget</label>
+                            <input type="number" class="form-control" name="edit_budget" id="edit_budget" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit_release">Release Year</label>
+                            <input type="number" class="form-control" name="edit_release_date" id="edit_release" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit_cover">Movie Cover</label>
+                            <input type="file" class="form-control mb-2" name="edit_cover" id="edit_cover" accept="image/*" ?>" required>
+                            <img id="currentCoverPreview" src="" alt="Current Cover" style="max-width: 100%; height: auto; display: none; border: 1px solid #ccc; margin-top: 5px;">
+                        </div>
+
+
+                        <div class="col-12">
+                            <label class="form-label" for="edit_description">Description</label>
+                            <textarea class="form-control" name="edit_description" id="edit_description" rows="3"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn secondary-btn" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn primary-btn" >Save Movie</button>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
 
 <!-- JS -->
 <script>
@@ -426,6 +605,8 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
     setupMultiInput("rolesInput", "selectedRoles", "rolesField");
     setupMultiInput("languagesInput", "selectedLanguages", "languagesField");
     setupMultiInput("directorsInput", "selectedDirectors", "directorsField");
+
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -446,7 +627,7 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $(document).ready(function () {
     const table = $('#moviesTable').DataTable({
-        "pageLength": 10,
+        "pageLength": 5,
         "order": [[0, "desc"]],
         paging: true,
         // language: {
@@ -468,6 +649,126 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 });
+
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const editButtons = document.querySelectorAll('.edit-btn');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.getElementById('editMovieModal');
+
+            // Попълваме стандартните полета
+            modal.querySelector('#edit_title').value = button.getAttribute('data-title') || '';
+            modal.querySelector('#edit_budget').value = button.getAttribute('data-budget') || '';
+            modal.querySelector('#edit_link').value = button.getAttribute('data-link') || '';
+            modal.querySelector('#edit_keywords').value = button.getAttribute('data-keywords') || '';
+            modal.querySelector('#edit_duration').value = button.getAttribute('data-duration') || '';
+            modal.querySelector('#edit_release').value = button.getAttribute('data-release') || '';
+            modal.querySelector('#edit_description').value = button.getAttribute('data-description') || '';
+            //modal.querySelector('#edit_cover').value = button.getAttribute('data-cover') || '';
+
+
+            // movie_id скрито поле
+            modal.querySelector('#edit_movie_id').value = button.getAttribute('data-id');
+
+            // Функция за попълване на badge-ове с X
+            function populateBadges(containerSelector, hiddenFieldSelector, dataString) {
+                const container = modal.querySelector(containerSelector);
+                const hiddenField = modal.querySelector(hiddenFieldSelector);
+
+                container.innerHTML = ''; // Изчиства само при първоначално отваряне!
+
+                if (dataString) {
+                    const items = dataString.split(',').map(item => item.trim());
+                    hiddenField.value = items.join(',');
+
+                    items.forEach(item => {
+                        addBadge(container, hiddenField, item);
+                    });
+                } else {
+                    hiddenField.value = '';
+                }
+            }
+
+            // Функция за създаване на единичен badge
+            function addBadge(container, hiddenField, itemText) {
+                if (!itemText) return; // За да не добавяме празно
+
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-secondary me-1 mb-1';
+                badge.style.cursor = 'pointer';
+                badge.innerHTML = `${itemText} <span class="ms-1" style="color:red; font-weight:bold;">&times;</span>`;
+
+                // Клик за изтриване
+                badge.querySelector('span').addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    badge.remove();
+
+                    // Обновяване на скритото поле
+                    const remainingBadges = [...container.querySelectorAll('.badge')].map(b => 
+                        b.childNodes[0].nodeValue.trim()
+                    );
+                    hiddenField.value = remainingBadges.join(',');
+                });
+
+                container.appendChild(badge);
+
+                // Обновяваме скритото поле (добавяме новото)
+                const allBadges = [...container.querySelectorAll('.badge')].map(b => 
+                    b.childNodes[0].nodeValue.trim()
+                );
+                hiddenField.value = allBadges.join(',');
+            }
+
+            // Попълване на началните данни
+            populateBadges('#editSelectedGenres', '#editGenresField', button.getAttribute('data-genres'));
+            populateBadges('#editSelectedActors', '#editActorsField', button.getAttribute('data-actors'));
+            populateBadges('#editSelectedRoles', '#editRolesField', button.getAttribute('data-characters'));
+            populateBadges('#editSelectedLanguages', '#editLanguagesField', button.getAttribute('data-languages'));
+            populateBadges('#editSelectedDirectors', '#editDirectorsField', button.getAttribute('data-directors'));
+
+            // ДОБАВЯНЕ НА НОВИ ОТ INPUT ПОЛЕТАТА
+            function setupInputAdd(inputSelector, containerSelector, hiddenFieldSelector) {
+                const input = modal.querySelector(inputSelector);
+                const container = modal.querySelector(containerSelector);
+                const hiddenField = modal.querySelector(hiddenFieldSelector);
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const newItem = input.value.trim();
+                        if (newItem !== '') {
+                            addBadge(container, hiddenField, newItem);
+                            input.value = '';
+                        }
+                    }
+                });
+            }
+
+            // За всички полета (жанрове, актьори и т.н.)
+            setupInputAdd('#editGenresInput', '#editSelectedGenres', '#editGenresField');
+            setupInputAdd('#editActorsInput', '#editSelectedActors', '#editActorsField');
+            setupInputAdd('#editRolesInput', '#editSelectedRoles', '#editRolesField');
+            setupInputAdd('#editLanguagesInput', '#editSelectedLanguages', '#editLanguagesField');
+            setupInputAdd('#editDirectorsInput', '#editSelectedDirectors', '#editDirectorsField');
+        });
+    });
+});
+
+const coverUrl = button.getAttribute('data-cover');
+const coverPreview = modal.querySelector('#currentCoverPreview');
+
+if (coverUrl) {
+    coverPreview.src = coverUrl;
+    coverPreview.style.display = 'block';
+} else {
+    coverPreview.style.display = 'none';
+}
+
 
 </script>
 

@@ -85,7 +85,7 @@ $movie_id = (int)$_GET['movie_id'];
                     <img src="./admin_area/uploads/<?=htmlspecialchars($movie['movie_img']); ?>" alt="Movie Poster">
                 </div>
                 <div class="movie-info">
-                    <h1><?=htmlspecialchars($movie['movie_title']); ?> (<?=htmlspecialchars($movie['release_year']); ?>)</h1>
+                    <h1><?=htmlspecialchars($movie['movie_title']); ?> (<?=htmlspecialchars(date("Y", strtotime($movie['release_year']))); ?>)</h1>
                     <div class="movie-meta">
                         <span class="rating">
                             <i class="fas fa-star"></i>
@@ -166,7 +166,7 @@ $movie_id = (int)$_GET['movie_id'];
                 <div class="details-grid">
                     <div class="detail-item">
                         <h3>Release Year</h3>
-                        <p><?=htmlspecialchars($movie['release_year']); ?></p>
+                        <p><?=htmlspecialchars(date("Y", strtotime($movie['release_year']))); ?></p>
                     </div>
                     <div class="detail-item">
                         <h3>Director</h3>
@@ -182,18 +182,38 @@ $movie_id = (int)$_GET['movie_id'];
                     </div>
                 </div>
             </section>
+            <?php 
+                    $movie_query="
+                        SELECT
+                            movie_id,
+                            movie_title,
+                            movie_img
+                        FROM movie
+                        ORDER BY random()
+                        LIMIT 4 OFFSET 0
 
+                    ";
+
+                    $movie_stmt = $pdo->query($movie_query);
+                    $movies = $movie_stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
             <section class="similar-movies">
                 <h2>Similar Movies</h2>
                 <div class="movie-grid">
+                    <?php foreach ($movies as $movie) {
+                        # code...
+                    ?>
                     <div class="movie-card">
-                        <img src="./images/miraculous.jpeg" alt="Similar Movie">
+                        <a href="movie_details.php?movie_id=<?= htmlspecialchars($movie['movie_id']) ?>">
+                            <img src="./admin_area/uploads/<?= $movie['movie_img'];?>" alt="Similar Movie">
+                        </a>
                         <div class="movie-info">
-                            <h4>Similar Movie 1</h4>
-                            <span class="rating">⭐ 4.3</span>
+                            <h4><?= htmlspecialchars($movie['movie_title']);?></h4>
+                            <span class="rating">⭐<?= number_format(rand(3,5) + rand(0,9)/10, 1) ?></span>
                         </div>
                     </div>
-                    <div class="movie-card">
+                    <?php } ?>
+                    <!-- <div class="movie-card">
                         <img src="./images/gundi.jpeg" alt="Similar Movie">
                         <div class="movie-info">
                             <h4>Similar Movie 2</h4>
@@ -206,7 +226,7 @@ $movie_id = (int)$_GET['movie_id'];
                             <h4>Similar Movie 3</h4>
                             <span class="rating">⭐ 4.4</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </section>
         </div>

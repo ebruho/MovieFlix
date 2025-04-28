@@ -115,7 +115,6 @@ if ($language_name !== '') {
     }
 }
 ?>
-<!-- <script>window.open('admin_movies.php')</script> -->
 
 <?php
 // include('../config.php');
@@ -128,4 +127,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // echo "<script>window.open('./admin_movies.php')</script>";
+htmlspecialchars("<script> window.open('./admin_movies.php') </script>");
 ?>
