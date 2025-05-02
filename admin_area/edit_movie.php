@@ -37,14 +37,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($director_name !== '') {
             $stmt = $pdo->prepare("SELECT director_id FROM Director WHERE director_name = ?");
             $stmt->execute([$director_name]);
-            $director_id = $stmt->fetchColumn();
-
-            if (!$director_id) {
-                $stmt = $pdo->prepare("INSERT INTO Director (director_name) VALUES (?) RETURNING director_id");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+            if ($result) {
+                $director_id = $result['director_id'];
+            } else {
+                $stmt = $pdo->prepare("INSERT INTO Director (director_name) VALUES (?)");
                 $stmt->execute([$director_name]);
-                $director_id = $stmt->fetchColumn();
+                $director_id = $pdo->lastInsertId();
             }
         }
+        
 
         // Език
         $language_id = null;
@@ -53,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->execute([$language_name]);
             $language_id = $stmt->fetchColumn();
 
-            if (!$language_id) {
+            if (!$language_id)  {
                 $stmt = $pdo->prepare("INSERT INTO MovieLanguage (language_name) VALUES (?) RETURNING language_id");
                 $stmt->execute([$language_name]);
                 $language_id = $stmt->fetchColumn();
@@ -68,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 WHERE movie_id = ?";
         
         $params = [
-            $title, $duration, $description, date("Y", strtotime($release_date)), 
+            $title, $duration, $description, $release_date, 
             $director_id, $language_id, $budget, $keywords, $link
         ];
         if ($imgPath) {
@@ -119,8 +122,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         echo "Movie updated successfully!";
+             header("Location: admin_movies.php?success=1");
+             exit;
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
+
+    echo "<script>window.open('admin_movies.php')</script>";
 }
 ?>

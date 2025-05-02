@@ -90,6 +90,7 @@ body.dark-mode .movie-info {
 .btn-primary {
     background-color: var(--primary-color);
     color: white;
+    text-decoration: none;
 }
 
 .btn-secondary {

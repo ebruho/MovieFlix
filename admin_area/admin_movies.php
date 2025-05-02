@@ -413,7 +413,7 @@ data-cover="<?= isset($movie['movie_img']) ? htmlspecialchars($movie['movie_img'
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="movieForm" method="POST" action="update_movie.php" enctype="multipart/form-data">
+                <form id="movieForm" method="POST" action="edit_movie.php" enctype="multipart/form-data">
                     <input type="hidden" name="edit_movie_id" id="edit_movie_id">
 
                     <div class="row g-3"> 
@@ -522,7 +522,7 @@ data-cover="<?= isset($movie['movie_img']) ? htmlspecialchars($movie['movie_img'
 
                         <div class="col-md-6">
                             <label class="form-label" for="edit_cover">Movie Cover</label>
-                            <input type="file" class="form-control mb-2" name="edit_cover" id="edit_cover" accept="image/*" ?>" required>
+                            <input type="file" class="form-control mb-2" name="edit_cover" id="edit_cover" accept="image/*"  required>
                             <img id="currentCoverPreview" src="" alt="Current Cover" style="max-width: 100%; height: auto; display: none; border: 1px solid #ccc; margin-top: 5px;">
                         </div>
 
@@ -671,6 +671,18 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.querySelector('#edit_description').value = button.getAttribute('data-description') || '';
             //modal.querySelector('#edit_cover').value = button.getAttribute('data-cover') || '';
 
+// Показване на текущото изображение (афиш)
+const coverUrl = button.getAttribute('data-cover');
+const coverPreview = modal.querySelector('#currentCoverPreview');
+
+if (coverUrl) {
+    coverPreview.src = coverUrl;
+    coverPreview.style.display = 'block';
+} else {
+    coverPreview.style.display = 'none';
+}
+
+
 
             // movie_id скрито поле
             modal.querySelector('#edit_movie_id').value = button.getAttribute('data-id');
@@ -759,15 +771,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-const coverUrl = button.getAttribute('data-cover');
-const coverPreview = modal.querySelector('#currentCoverPreview');
 
-if (coverUrl) {
-    coverPreview.src = coverUrl;
-    coverPreview.style.display = 'block';
-} else {
-    coverPreview.style.display = 'none';
-}
 
 
 </script>

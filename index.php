@@ -1,6 +1,18 @@
 <?php 
 include "config.php";
 ?>
+<?php
+session_start();
+
+// $user_query = $pdo->prepare("SELECT * FROM user");
+// $user_query->execute();
+// $user = $user_query->fetch(PDO::FETCH_ASSOC);
+
+
+// $_SESSION['user_id'] = $user['user_id'];
+// $_SESSION['username'] = $user['username'];
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +35,11 @@ include "config.php";
             <ul class="nav-links">
                 <li><a href="./index.php" class="active">Home</a></li>
                 <li><a href="#">Movies</a></li>
-                <li><a href="#">Register</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="user_area/profile.php">Profile</a></li>
+                <?php else: ?>
+                <li><a href="user_area/register.php">Register</a></li>
+                <?php endif; ?>
                 <li><a href="#">Contact</a></li>
                 <li><a href="#">Watchlist</a></li>
             </ul>
@@ -39,7 +55,11 @@ include "config.php";
                 </div>
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Login</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="./user_area/logout.php">Logout</a></li>
+                <?php else: ?>
+                <li><a href="./user_area/login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>

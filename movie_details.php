@@ -7,6 +7,13 @@ if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
 }
 $movie_id = (int)$_GET['movie_id'];
 ?>
+<?php
+session_start();
+
+
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,9 +37,13 @@ $movie_id = (int)$_GET['movie_id'];
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
+                <li><a href="index.php" class="active">Home</a></li>
                 <li><a href="#">Movies</a></li>
-                <li><a href="#">Register</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="user_area/profile.php">Profile</a></li>
+                <?php else: ?>
+                <li><a href="user_area/register.php">Register</a></li>
+                <?php endif; ?>
                 <li><a href="#">Contact</a></li>
                 <li><a href="#">Watchlist</a></li>
             </ul>
@@ -48,8 +59,13 @@ $movie_id = (int)$_GET['movie_id'];
                 </div>
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Login</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="./user_area/logout.php">Logout</a></li>
+                <?php else: ?>
+                <li><a href="./user_area/login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
+
         </nav>
     </header>
     
@@ -112,9 +128,9 @@ $movie_id = (int)$_GET['movie_id'];
                         </span>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn-primary">
-                            <i class="fas fa-play"></i> Watch Now
-                        </button>
+                        <a class="btn-primary" href="watchmovie.php?movie_id=<?= $movie_id ?>" style="text-decoration:none;">                     
+                            <i class="fas fa-play"></i> Watch Now    
+                        </a>
                         <button class="btn-secondary">
                             <i class="fas fa-plus"></i> Add to Watchlist
                         </button>
