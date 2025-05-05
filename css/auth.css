@@ -1,0 +1,80 @@
+body {
+    background-color: #121212;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.auth-container {
+    background-color: #1e1e1e;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #e50914;
+}
+
+.auth-form label {
+    display: block;
+    margin: 0.5rem 0 0.2rem;
+    font-weight: bold;
+    color: #ccc;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #2c2c2c;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.auth-form input:focus {
+    outline: 2px solid #e50914;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 0.7rem;
+    border: none;
+    background-color: #e50914;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #c40812;
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.auth-link a {
+    color: #e50914;
+    text-decoration: none;
+}
+
+.auth-form input[type="file"] {
+    color: #ccc;
+    background-color: #2c2c2c;
+    padding: 0.4rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}

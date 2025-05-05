@@ -24,8 +24,8 @@ $users="CREATE TABLE IF NOT EXISTS Users (
             movie_id SERIAL PRIMARY KEY,
             movie_title VARCHAR(255),
             duration VARCHAR(255),
-            movie_description VARCHAR(255),
-            release_year INT,
+            movie_description TEXT,
+            release_date DATE,
             director_id INT,
             language_id INT,
             budget DECIMAL(7,2),
@@ -168,6 +168,25 @@ $language="CREATE TABLE IF NOT EXISTS MovieLanguage (
         $pdo->exec($fkmoviegenre);
 
         $budgetIncreaseValue="ALTER TABLE Movie ALTER COLUMN budget TYPE NUMERIC(10, 2)";
+        $pdo->exec($budgetIncreaseValue);
+
+        
+        // Change movie_description from VARCHAR(255) to TEXT   
+        $alterMovieDescription = "ALTER TABLE Movie ALTER COLUMN movie_description TYPE TEXT";
+        $pdo->exec($alterMovieDescription);
+
+        // Change release_year from INT to DATE
+         $alterReleaseYear = "ALTER TABLE Movie ALTER COLUMN release_year TYPE DATE";
+        $pdo->exec($alterReleaseYear);
+
+    // Change comments from VARCHAR(255) to TEXT
+        $alterComments = "ALTER TABLE Rating ALTER COLUMN comments TYPE TEXT";
+        $pdo->exec($alterComments);
+        
+        
+        echo "Columns modified successfully.";
+
+
 
 
 } catch (PDOException $e) {

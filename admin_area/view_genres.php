@@ -42,3 +42,33 @@
                     </tbody>
                 </table>
             </div>
+
+<!-- 
+            .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+} -->
+ 
+<!-- <ul class="nav-links">
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <li class="user-info">
+            <?php if (!empty($_SESSION['user_img'])): ?>
+                <img src="<?php echo htmlspecialchars($_SESSION['user_img']); ?>" alt="Avatar" class="user-avatar">
+            <?php else: ?>
+                <img src="default-avatar.png" alt="Default Avatar" class="user-avatar">
+            <?php endif; ?>
+            <span><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+        </li>
+        <li><a href="logout.php">Logout</a></li>
+    <?php else: ?>
+        <li><a href="user_area/login.php" class="active">Login</a></li>
+    <?php endif; ?>
+</ul> -->

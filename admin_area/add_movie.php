@@ -69,7 +69,7 @@ if ($language_name !== '') {
         $stmt = $pdo->prepare("INSERT INTO Movie (movie_title, duration, movie_description, release_year, director_id, language_id, budget, keywords, movie_img, movie_link)
                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING movie_id");
         $stmt->execute([
-            $title, $duration, $description, date("Y", strtotime($release_date)), $director_id, $language_id,
+            $title, $duration, $description, $release_date, $director_id, $language_id,
             $budget, $keywords, $imgPath, $link
         ]);
         $movie_id = $stmt->fetchColumn();
@@ -115,7 +115,6 @@ if ($language_name !== '') {
     }
 }
 ?>
-<!-- <script>window.open('admin_movies.php')</script> -->
 
 <?php
 // include('../config.php');
@@ -127,5 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "</pre>";
 }
 
-// echo "<script>window.open('./admin_movies.php')</script>";
+header("Location: admin_movies.php?success=1");
+exit;
 ?>

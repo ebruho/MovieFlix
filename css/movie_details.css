@@ -1,4 +1,8 @@
 /* Movie Details Page Styles */
+/* body{
+    overflow-x: hidden;
+} */
+
 .movie-details {
     max-width: 1200px;
     margin: 0 auto;
@@ -86,6 +90,7 @@ body.dark-mode .movie-info {
 .btn-primary {
     background-color: var(--primary-color);
     color: white;
+    text-decoration: none;
 }
 
 .btn-secondary {

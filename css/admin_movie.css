@@ -314,15 +314,15 @@ body.dark-mode .table td{
     transform: translateY(-2px);
 }
 
-.bulk-actions {
+/* .bulk-actions {
     display: flex;
     gap: 1rem;
     align-items: center;
-}
+} */
 
-.bulk-select {
+/* .bulk-select {
     width: 150px;
-}
+} */
 
 .pagination {
     margin: 2rem 0 0;
@@ -342,7 +342,7 @@ body.dark-mode .table td{
     transition: all 0.3s ease;
 }
 
-body.dark-mode .page-link{
+body.dark-mode .page-link {
     background: #141414;
 }
 
@@ -352,9 +352,8 @@ body.dark-mode .page-link{
     color: white;
 }
 
-body.dark-mode
-.page-link:hover,
-.page-item.active .page-link {
+body.dark-mode .page-link:hover,
+body.dark-mode .page-item.active .page-link {
     background: linear-gradient(45deg, #c62828, #e50914);
     color: white;
 }

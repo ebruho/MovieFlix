@@ -1,3 +1,17 @@
+<?php
+
+require 'config.php';
+
+if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
+    die("Invalid movie ID");
+}
+$movie_id = (int)$_GET['movie_id'];
+?>
+<?php
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,26 +32,64 @@
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="sort/sort_movies.php" class="active">Movies</a></li>
-                <li><a href="#">TV Shows</a></li>
-                <li><a href="watchlist.html">Watchlist</a></li>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Movies</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="user_area/profile.php">Profile</a></li>
+                <?php else: ?>
+                <li><a href="user_area/register.php">Register</a></li>
+                <?php endif; ?>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Watchlist</a></li>
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">
                     <i class="fas fa-moon"></i>
                 </button>
-            </div>
+                
+                <ul class="nav-links">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <li><a href="./user_area/logout.php">Logout</a></li>
+                    <?php else: ?>
+                    <li><a href="./user_area/login.php">Login</a></li>
+                    <?php endif; ?>
+            </ul>
         </nav>
     </header>
+    <main class="movie-details">
+        <?php 
+            $sql_query = "SELECT 
+                m.movie_title,
+                m.movie_img,
+                m.release_year,
+                m.duration,
+                m.movie_description,
+                m.budget,
+                m.movie_link,
+                d.director_name,
+                l.language_name
+                FROM movie m
+                LEFT JOIN director d ON m.director_id = d.director_id
+                LEFT JOIN movielanguage l ON m.language_id = l.language_id
+                WHERE m.movie_id = ?";
 
+                $stmt = $pdo->prepare($sql_query);
+                $stmt->execute([$movie_id]);
+                $movie = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if(!$movie){
+                    die("Movie not found");
+                }
+        ?>
     <!-- Main Content -->
     <main class="watch-container">
         <div class="video-section">
             <div class="video-player">
+               
+
                 <iframe 
                     id="moviePlayer"
-                    src="https://www.youtube.com/embed/wJO_vIDZn-I"
+                    src="https://www.youtube.com/embed/<?= $movie['movie_link'] ?>"
                     frameborder="0"
                     allowfullscreen
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -87,8 +139,8 @@
                         <span class="rating">
                             <i class="fas fa-star"></i> 4.5
                         </span>
-                        <span class="year">2024</span>
-                        <span class="duration">2h 30min</span>
+                        <span class="year"><?= $movie['release_year'] ?></span>
+                        <span class="duration"><?= $movie['duration']?> min</span>
                         <span class="quality">HD</span>
                     </div>
                 </div>
@@ -109,24 +161,40 @@
             <div class="tabs-container">
                 <div class="tabs">
                     <button class="tab-btn active">About</button>
-                    <button class="tab-btn">Episodes</button>
-                    <button class="tab-btn">More Like This</button>
+                    <!-- <button class="tab-btn">Episodes</button>
+                    <button class="tab-btn">More Like This</button> -->
                 </div>
 
                 <div class="tab-content">
                     <div class="tab-pane active">
                         <h3>Synopsis</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p><?= $movie['movie_description']?></p>
                         
                         <h3>Cast & Crew</h3>
-                        <div class="cast-list">
-                            <div class="cast-member">
-                                <img src="https://via.placeholder.com/50" alt="Actor Name">
-                                <div class="cast-info">
-                                    <h4>Actor Name</h4>
-                                    <p>Character Name</p>
-                                </div>
-                            </div>
+<?php
+$cast_sql = "
+    SELECT a.actor_name, ch.character_name
+    FROM moviecharacter ch
+    JOIN actor a ON ch.actor_id = a.actor_id
+    WHERE ch.movie_id = ?";
+
+$cast_stmt = $pdo->prepare($cast_sql);
+$cast_stmt->execute([$movie_id]);
+$cast = $cast_stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<div class="cast-list">
+    <?php foreach ($cast as $member): ?>
+        <div class="cast-member">
+            <img src="./images/default_actor.jpg" alt="<?= htmlspecialchars($member['actor_name']) ?>">
+            <div class="cast-info">
+                <h4>Actor Name: <?= htmlspecialchars($member['actor_name']) ?></h4>
+                <p>Character Name: <?= htmlspecialchars($member['character_name']) ?></p>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
                             <!-- More cast members -->
                         </div>
                     </div>
@@ -134,7 +202,7 @@
             </div>
         </div>
 
-        <div class="next-up">
+        <!-- <div class="next-up">
             <h3>Next Up</h3>
             <div class="next-episodes">
                 <div class="episode-card">
@@ -144,9 +212,8 @@
                         <p>Brief description of the next movie</p>
                     </div>
                 </div>
-                <!-- More episode cards -->
             </div>
-        </div>
+        </div> -->
     </main>
 
     <!-- Footer -->
