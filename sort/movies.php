@@ -1,10 +1,26 @@
+<?php 
+include "../config.php";
+?>
+<?php
+session_start();
+
+// $user_query = $pdo->prepare("SELECT * FROM user");
+// $user_query->execute();
+// $user = $user_query->fetch(PDO::FETCH_ASSOC);
+
+
+// $_SESSION['user_id'] = $user['user_id'];
+// $_SESSION['username'] = $user['username'];
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieFlix - Movies</title>
+    <title>MovieFlix - Find Your Next Movie</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../css/sort_movie.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -18,9 +34,14 @@
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="../index.html" class="active">Home</a></li>
-                <li><a href="sort/sort_movies.html">Movies</a></li>
-                <li><a href="#">TV Shows</a></li>
+                <li><a href="../index.php" class="active">Home</a></li>
+                <li><a href="./sort/sort_movies.php">Movies</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="user_area/profile.php">Profile</a></li>
+                <?php else: ?>
+                <li><a href="user_area/register.php">Register</a></li>
+                <?php endif; ?>
+                <li><a href="#">Contact</a></li>
                 <li><a href="#">Watchlist</a></li>
             </ul>
             <div class="nav-actions">
@@ -34,54 +55,25 @@
                     </form>
                 </div>
             </div>
+            <ul class="nav-links">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="./user_area/logout.php">Logout</a></li>
+                <?php else: ?>
+                <li><a href="./user_area/login.php">Login</a></li>
+                <?php endif; ?>
+            </ul>
         </nav>
     </header>
 
     <!-- Main Content -->
     <main>
-        <!-- <section class="hero">
-            <h2>Discover Your Next Favorite Movie</h2>
-            <p>Browse through thousands of movies and find the perfect one for your mood</p>
-        </section> -->
+
         <section class="featured-movies">
             <h3>Featured Movies</h3>
-            
-            
+            <div class="movie-grid">
                 <!-- Movie cards will be added here -->
-                
-                
-                    
-                      <!-- <input class="form-check-input me-1" name="sortMovie[]" type="checkbox" value="actors">
-                      Actors<br>
-                      <input class="form-check-input me-1" name="sortMovie[]" type="checkbox" value="names">
-                      Names<br>
-                      <input class="form-check-input me-1" name="sortMovie[]" type="checkbox" value="director">
-                      Director<br>
-                      <input class="form-check-input me-1" name="sortMovie[]" type="checkbox" value="rating">
-                      Ratings<br>
-                      <input class="form-check-input me-1" name="sortMovie[]" type="checkbox" value="genre">
-                      Genre<br></label> -->
-                    
-                    
-                    <!-- <label class="list-group-item">
-                      <input class="form-check-input me-1" type="checkbox" value="actors">
-                      Actors
-                    </label><br>
-                    <label class="list-group-item">
-                      <input class="form-check-input me-1" type="checkbox" value="names">
-                      Names
-                    </label>
-                    <label class="list-group-item">
-                      <input class="form-check-input me-1" type="checkbox" value="director">
-                      Director
-                    </label><br>
-                    <label class="list-group-item">
-                      
-                    </label> -->
-                    
-                  </div><div class="movie-grid">
 
-                    <div class="accordion">
+                <div class="accordion">
                         <div class="list-group">
                                         <div class="section">
                                         <a class="section-title" href="#accordion-1">Actors</a>
@@ -106,57 +98,45 @@
                                         <div id="accordion-1" class="section-content">
                                         <p><form method="POST" action="sort_movies.php">
                                             <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
+                                            Animation 
+                                            <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
                                             Comedy<br>
                                             <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
-                                            Crime<br>
+                                            Crime &nbsp &nbsp &nbsp
                                             <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
                                             Drama<br></p>
                                         </div><!-- section-content end -->
                                         </div><!-- section end -->
-                                         <input type="submit"name="submit"value="Sort"></form>  </div>
+                                         <input type="submit"name="submit"value="Sort"align="center"></form>  </div>
                                         </div><!-- accordion end -->
 
+                <?php 
+                    $movie_query="
+                        SELECT
+                            movie_id,
+                            movie_title,
+                            movie_img
+                        FROM movie
+                        ORDER BY random()
+                        LIMIT 5 OFFSET 0
+
+                    ";
+
+                    $movie_stmt = $pdo->query($movie_query);
+                    $movies = $movie_stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                <?php foreach($movies as $movie): ?>
                 <div class="movie-card">
-                    <img src="./images/minecraft.jpeg" alt="Movie poster">
+                    <a href="../movie_details.php?movie_id=<?php echo $movie['movie_id']; ?>">
+                        <img src="../admin_area/uploads/<?php echo htmlspecialchars($movie['movie_img']); ?>" alt="Movie poster">
+                    </a>
                     <div class="movie-info">
-                        <h4>Movie Title</h4>
+                        <h4><?php echo htmlspecialchars($movie['movie_title']); ?></h4>
                         <span class="rating">⭐ 4.5</span>
                     </div>
                 </div>
+                <?php endforeach; ?>
 
-
-                <div class="movie-card">
-                    <img src="./images/gundi.jpeg" alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div>
-
-                <div class="movie-card">
-                    <img src="./images/wicked.jpeg" alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div>
-
-                <div class="movie-card">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1_Z1uB6rBAN0BoGxs0Goua1BvTDoU6nzkow&s"
-                        alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div>
-
-                <div class="movie-card">
-                    <img src="./images/terrifier3.jpeg" alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div>
 
                 <!--  more movie cards -->
             </div>
@@ -191,7 +171,7 @@
             <p>&copy; 2024 MovieFlix. All rights reserved.</p>
         </div>
     </footer>
-    <script src="../script.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
