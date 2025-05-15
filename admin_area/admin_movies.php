@@ -649,7 +649,7 @@ $(document).ready(function () {
         table.search(this.value).draw();
     });
 });
-
+//svarshva do tuk
 </script>
 
 
