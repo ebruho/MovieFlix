@@ -294,8 +294,8 @@
             color: #333;
         }
 
-        .page-link{
-            /* background: #222; */
+        /*.page-link{
+             background: #222; 
             color: #222;
         }
 
@@ -311,5 +311,38 @@
         .page-link:hover{
             background: #e50914;
             color: #e3f2fd;
-        }
+        }*/
 
+.pagination {
+    margin: 2rem 0 0;
+    justify-content: center;
+}
+
+.page-link {
+    border: none;
+    margin: 0 0.2rem;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .page-link {
+    background: #141414;
+}
+
+.page-link:hover,
+.page-item.active .page-link {
+    background: linear-gradient(45deg, #c62828, #e50914);
+    color: white;
+}
+
+body.dark-mode .page-link:hover,
+body.dark-mode .page-item.active .page-link {
+    background: linear-gradient(45deg, #c62828, #e50914);
+    color: white;
+}
