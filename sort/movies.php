@@ -1,5 +1,5 @@
 <?php 
-include "config.php";
+include "../config.php";
 ?>
 <?php
 session_start();
@@ -21,7 +21,8 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MovieFlix - Find Your Next Movie</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../css/sort_movie.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -33,17 +34,15 @@ session_start();
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="./index.php" class="active">Home</a></li>
-                <li><a href="./sort/movies.php">Movies</a></li>
+                <li><a href="../index.php" class="active">Home</a></li>
+                <li><a href="./sort/sort_movies.php">Movies</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                 <li><a href="user_area/profile.php">Profile</a></li>
                 <?php else: ?>
                 <li><a href="user_area/register.php">Register</a></li>
                 <?php endif; ?>
                 <li><a href="#">Contact</a></li>
-                <?php if(isset($_SESSION['user_id'])): ?>
                 <li><a href="#">Watchlist</a></li>
-                <?php endif; ?>
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">
@@ -68,26 +67,48 @@ session_start();
 
     <!-- Main Content -->
     <main>
-        <section class="hero">
-            <!-- <?php if(isset($_SESSION['user_id'])):?>
-                    <h3>Welcome, <?php echo $_SESSION['username']?></h3>
-            <?php endif; ?> -->
-            <h2>Discover Your Next Favorite Movie</h2>
-            <p>Browse through thousands of movies and find the perfect one for your mood</p>
-        </section>
 
         <section class="featured-movies">
             <h3>Featured Movies</h3>
             <div class="movie-grid">
                 <!-- Movie cards will be added here -->
 
-                <!-- <div class="movie-card">
-                    <img src="./images/minecraft.jpeg" alt="Movie poster">
-                    <div class="movie-info">
-                        <h4>Movie Title</h4>
-                        <span class="rating">⭐ 4.5</span>
-                    </div>
-                </div> -->
+                <div class="accordion">
+                        <div class="list-group">
+                                        <div class="section">
+                                        <a class="section-title" href="#accordion-1">Actors</a>
+                                        <div id="accordion-1" class="section-content">
+                                        <p><form method="POST" action="sort_movies.php">
+                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
+                                            From A-Z<br>
+                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
+                                            From Z-A<br></p>
+                                        </div><!-- section-content end -->
+                                        <!--</div> section end -->
+                                        <a class="section-title" href="#accordion-1">Year</a>
+                                        <div id="accordion-1" class="section-content">
+                                        <p><form method="POST" action="sort_movies.php">
+                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
+                                            Ascending<br>
+                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
+                                            Descending<br></p>
+                                        </div><!-- section-content end -->
+                                        <!-- </div>section end -->
+                                        <a class="section-title" href="#accordion-1">Genre</a>
+                                        <div id="accordion-1" class="section-content">
+                                        <p><form method="POST" action="sort_movies.php">
+                                            <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
+                                            Animation 
+                                            <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
+                                            Comedy<br>
+                                            <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
+                                            Crime &nbsp &nbsp &nbsp
+                                            <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
+                                            Drama<br></p>
+                                        </div><!-- section-content end -->
+                                        </div><!-- section end -->
+                                         <input type="submit"name="submit"value="Sort"align="center"></form>  </div>
+                                        </div><!-- accordion end -->
 
                 <?php 
                     $movie_query="
@@ -97,7 +118,7 @@ session_start();
                             movie_img
                         FROM movie
                         ORDER BY random()
-                        LIMIT 6 OFFSET 0
+                        LIMIT 5 OFFSET 0
 
                     ";
 
@@ -106,8 +127,8 @@ session_start();
                 ?>
                 <?php foreach($movies as $movie): ?>
                 <div class="movie-card">
-                    <a href="movie_details.php?movie_id=<?php echo $movie['movie_id']; ?>">
-                        <img src="./admin_area/uploads/<?php echo htmlspecialchars($movie['movie_img']); ?>" alt="Movie poster">
+                    <a href="../movie_details.php?movie_id=<?php echo $movie['movie_id']; ?>">
+                        <img src="../admin_area/uploads/<?php echo htmlspecialchars($movie['movie_img']); ?>" alt="Movie poster">
                     </a>
                     <div class="movie-info">
                         <h4><?php echo htmlspecialchars($movie['movie_title']); ?></h4>
