@@ -45,7 +45,9 @@ session_start();
                 <li><a href="user_area/register.php">Register</a></li>
                 <?php endif; ?>
                 <li><a href="#">Contact</a></li>
+                <?php if(isset($_SESSION['user_id'])): ?>
                 <li><a href="#">Watchlist</a></li>
+                <?php endif; ?>
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">

@@ -41,7 +41,9 @@ session_start();
                 <li><a href="user_area/register.php">Register</a></li>
                 <?php endif; ?>
                 <li><a href="#">Contact</a></li>
+                <?php if(isset($_SESSION['user_id'])): ?>
                 <li><a href="#">Watchlist</a></li>
+                <?php endif; ?>
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">
@@ -67,6 +69,9 @@ session_start();
     <!-- Main Content -->
     <main>
         <section class="hero">
+            <!-- <?php if(isset($_SESSION['user_id'])):?>
+                    <h3>Welcome, <?php echo $_SESSION['username']?></h3>
+            <?php endif; ?> -->
             <h2>Discover Your Next Favorite Movie</h2>
             <p>Browse through thousands of movies and find the perfect one for your mood</p>
         </section>
