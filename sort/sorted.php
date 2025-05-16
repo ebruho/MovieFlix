@@ -93,18 +93,18 @@ session_start();?>
                                         <div class="section">
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sorted.php">
+                                        <p><form method="POST" action="sort_movies.php">
                                             <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
                                             From A-Z<br>
                                             <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
                                             From Z-A<br></p>
                                         </div><!-- section-content end -->
-                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Name</a>
+                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
                                         <div id="accordion-1" class="section-content">
                                         <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortName[]" type="radio" value="A-Z">
+                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
                                             From A-Z<br>
-                                            <input class="form-check-input me-1" name="sortName[]" type="radio" value="Z-A">
+                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
                                             From Z-A<br></p>
                                         </div>
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
@@ -142,16 +142,63 @@ session_start();?>
 </html>
 
                 <?php 
-                    $movie_query="
+                $a="INNER JOIN movielanguage ON movie.language_id=movielanguage.language_id";
+$b;      
+if (isset($_POST['submit'])) {
+    $sort=$_POST['sortName'];
+}
+foreach ($sort as $key => $value) {
+    if ($value=="A-Z"){
+        $b="movielanguage.language_name DESC,movie.movie_title ASC";
+    }
+    elseif ($value=="Z-A") {
+        $b="movie.movie_title DESC";
+    }
+}
+                    
+//()
+$movie_query="
                         SELECT
-                            movie_id,
-                            movie_title,
-                            movie_img
+                            movie.movie_id,
+                            movie.movie_title,
+                            movie.movie_img
                         FROM movie
-                        ORDER BY random()
-                        LIMIT 5 OFFSET 0
+                        $a
+                        ORDER BY $b
+                        LIMIT 8 OFFSET 0
 
-                    ";
+                    "; 
+
+
+
+// $stmt = $pdo->query("SELECT  FROM ");
+//     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// // Извеждаме резултатите в HTML таблица
+//     if ($results) {
+//         echo "<table border='1'>";
+//         // Извеждаме заглавния ред (имена на колоните)
+//         echo "<tr>";
+//         foreach (array_keys($results[0]) as $column) {
+//             echo "<th>" . htmlspecialchars($column) . "</th>";
+//         }
+//         echo "</tr>";
+
+//         // Извеждаме данните
+//         foreach ($results as $row) {
+//             echo "<tr>";
+//             foreach ($row as $cell) {
+//                 echo "<td>" . htmlspecialchars($cell) . "</td>";
+//             }
+//             echo "</tr>";
+//         }
+//         echo "</table>";
+//     } else {
+//         echo "Няма намерени резултати.";
+//     }
+
+
+
 
                     $movie_stmt = $pdo->query($movie_query);
                     $movies = $movie_stmt->fetchAll(PDO::FETCH_ASSOC);
