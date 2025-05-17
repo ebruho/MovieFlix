@@ -34,7 +34,7 @@ session_start();
             </div>
             <ul class="nav-links">
                 <li><a href="./index.php" class="active">Home</a></li>
-                <li><a href="./sort/movies.php">Movies</a></li>
+                <li><a href="./sort/sorted.php">Movies</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                 <li><a href="user_area/profile.php">Profile</a></li>
                 <?php else: ?>
