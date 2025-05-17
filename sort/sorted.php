@@ -25,7 +25,7 @@ session_start();?>
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="../index.html" class="active">Home</a></li>
+                <li><a href="../index.php" class="active">Home</a></li>
                 <li><a href="sort/sort_movies.html">Movies</a></li>
                 <li><a href="#">TV Shows</a></li>
                 <li><a href="#">Watchlist</a></li>
@@ -93,83 +93,190 @@ session_start();?>
                                         <div class="section">
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From A-Z<br>
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From Z-A<br></p>
+                                        <p><form method="POST" action="#">
+<?php
+
+
+$showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
+    $movie_stmt2=$pdo->query($showTableGenre);
+    $movies2 = $movie_stmt2->fetchAll(PDO::FETCH_ASSOC);
+        foreach($movies2 as $movie2){
+            $string=$movie2['actor_name'];
+            //$string=trim($string);
+            echo "<input class='form-check-input me-1' name='sortActor[]' type='checkbox' value='$string'>";
+            echo $movie2['actor_name'];echo "<br>";
+        }?>
                                         </div><!-- section-content end -->
-                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
+                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Name</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
+                                        <p>
+                                            <input class="form-check-input me-1" name="sortName[]" type="radio" value="A-Z">
                                             From A-Z<br>
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
+                                            <input class="form-check-input me-1" name="sortName[]" type="radio" value="Z-A">
                                             From Z-A<br></p>
                                         </div>
-                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
+                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Rating</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From A-Z<br>
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From Z-A<br></p>
+                                        <p>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            1 Star<br>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            2 Stars<br>
+                                        <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            3 Stars<br>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            4 Stars<br>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            5 Stars<br></p>
                                         </div>
                                         <!--</div> section end -->
                                         <a class="section-title" href="#accordion-1">Year</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            Ascending<br>
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            Descending<br></p>
+                                        <p>
+                                        <?php
+
+
+$showTableGenre="SELECT DISTINCT release_year FROM movie";
+    $movie_stmt2=$pdo->query($showTableGenre);
+    $movies2 = $movie_stmt2->fetchAll(PDO::FETCH_ASSOC);
+        foreach($movies2 as $movie2){
+            $string=$movie2['release_year'];
+            echo "<input class='form-check-input me-1' name='sortYear[]' type='checkbox' value='$string'>";
+            echo $movie2['release_year'];echo "<br>";
+        }?></p>
                                         </div><!-- section-content end -->
                                         <!-- </div>section end -->
                                         <a class="section-title" href="#accordion-1">Genre</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
+                                        <p>
+<?php
+
+
+$showTableGenre="SELECT * FROM genre ORDER BY genre_name";
+    $movie_stmt2=$pdo->query($showTableGenre);
+    $movies2 = $movie_stmt2->fetchAll(PDO::FETCH_ASSOC);
+        foreach($movies2 as $movie2){
+            $string=$movie2['genre_name'];
+            echo "<input class='form-check-input me-1' name='sortGenre[]' type='checkbox' value='$string'>";
+            echo $movie2['genre_name'];echo "<br>";
+        }?>
+                                        
+                                            <!-- <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
                                             Comedy<br>
                                             <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
                                             Crime<br>
                                             <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
-                                            Drama<br></p>
+                                            Drama<br></p> -->
                                         </div><!-- section-content end -->
                                         </div><!-- section end -->
-                                         <input type="submit"name="submit"value="Sort"></form>  </div>
+                                         <input type="submit"name="submit"value="Sort"></form> </div>
                                         </div><!-- accordion end --></div>
                     <div class="col-lg-9"><div class="movie-grid">
 </html>
 
                 <?php 
-                $a="INNER JOIN movielanguage ON movie.language_id=movielanguage.language_id";
-$b;      
+$join="";         
+$order=""; 
+$where="";     
 if (isset($_POST['submit'])) {
-    $sort=$_POST['sortName'];
-}
-foreach ($sort as $key => $value) {
-    if ($value=="A-Z"){
-        $b="movielanguage.language_name DESC,movie.movie_title ASC";
+    if (isset($_POST['sortName'])) {
+        $sort=$_POST['sortName'];
+        foreach ($sort as $key => $value) {
+            if ($value=="A-Z"){
+                $order="ORDER BY movie.movie_title ASC";
+            }
+            elseif ($value=="Z-A") {
+                $order="ORDER BY movie.movie_title DESC";
+            }
+        }
     }
-    elseif ($value=="Z-A") {
-        $b="movie.movie_title DESC";
+    if (isset($_POST['sortActor'])) {
+        $sort1=$_POST['sortActor'];
+        $flag=false;
+        $join=$join."INNER JOIN moviecharacter ON movie.movie_id=moviecharacter.movie_id
+        INNER JOIN actor ON moviecharacter.actor_id=actor.actor_id ";
+        if ($where!="") {
+            $where=$where." OR actor.actor_name IN(";
+            $flag=true;
+        }
+        foreach ($sort1 as $key => $value) {
+        
+        if ($flag==false) {
+           if ($where=="") {
+            $where=$where."WHERE actor.actor_name IN(";
+        }
+        else{
+            $where=$where.", ";
+        } 
+        }
+        
+        $where=$where."'$value'";
+        $flag=false;
+    }$where=$where.")";
+    }
+    if (isset($_POST['sortYear'])) {
+        $sort=$_POST['sortYear'];
+        $flag=false;
+        if ($where!="") {
+            $where=$where." OR movie.release_year IN(";
+            $flag=true;
+        }
+        foreach ($sort as $key => $value) {
+        // $join="INNER JOIN moviecharacter ON movie.movie_id=moviecharacter.movie_id
+        // INNER JOIN actor ON moviecharacter.actor_id=actor.actor_id";
+        // echo $value;
+        if ($flag==false) {
+           if ($where=="") {
+            $where=$where."WHERE movie.release_year IN(";
+        }
+        else{
+            $where=$where.", ";
+        } 
+        }
+        
+        $where=$where."'$value'";
+        $flag=false;
+    }$where=$where.")";
+    }
+    if (isset($_POST['sortGenre'])) {
+        $sort=$_POST['sortGenre'];
+        $flag=false;
+        $join=$join."INNER JOIN moviegenre ON movie.movie_id=moviegenre.movie_id
+         INNER JOIN genre ON moviegenre.genre_id=genre.genre_id ";
+        if ($where!="") {
+            $where=$where." OR genre.genre_name IN(";
+            $flag=true;
+        }
+        foreach ($sort as $key => $value) {
+        
+        // echo $value;
+        if ($flag==false) {
+           if ($where=="") {
+            $where=$where."WHERE genre.genre_name IN(";
+        }
+        else{
+            $where=$where.", ";
+        } 
+        }
+        
+        $where=$where."'$value'";
+        $flag=false;
+    }$where=$where.")";
     }
 }
-                    
-//()
 $movie_query="
-                        SELECT
+                        SELECT DISTINCT
                             movie.movie_id,
                             movie.movie_title,
                             movie.movie_img
                         FROM movie
-                        $a
-                        ORDER BY $b
+                        $join
+                        $where
+                        $order
                         LIMIT 8 OFFSET 0
-
                     "; 
 
-
+//echo $movie_query;
 
 // $stmt = $pdo->query("SELECT  FROM ");
 //     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -94,10 +94,18 @@ session_start();?>
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
                                         <div id="accordion-1" class="section-content">
                                         <p><form method="POST" action="sorted.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From A-Z<br>
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From Z-A<br></p>
+<?php
+
+
+$showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
+    $movie_stmt2=$pdo->query($showTableGenre);
+    $movies2 = $movie_stmt2->fetchAll(PDO::FETCH_ASSOC);
+        foreach($movies2 as $movie2){
+            $string=$movie2['actor_name'];
+            //$string=trim($string);
+            echo "<input class='form-check-input me-1' name='sortActor[]' type='checkbox' value='$string'>";
+            echo $movie2['actor_name'];echo "<br>";
+        }?>
                                         </div><!-- section-content end -->
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Name</a>
                                         <div id="accordion-1" class="section-content">
@@ -107,33 +115,58 @@ session_start();?>
                                             <input class="form-check-input me-1" name="sortName[]" type="radio" value="Z-A">
                                             From Z-A<br></p>
                                         </div>
-                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
+                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Rating</a>
                                         <div id="accordion-1" class="section-content">
                                         <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From A-Z<br>
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            From Z-A<br></p>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            1 Star<br>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            2 Stars<br>
+                                        <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            3 Stars<br>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            4 Stars<br>
+                                            <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
+                                            5 Stars<br></p>
                                         </div>
                                         <!--</div> section end -->
                                         <a class="section-title" href="#accordion-1">Year</a>
                                         <div id="accordion-1" class="section-content">
                                         <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            Ascending<br>
-                                            <input class="form-check-input me-1" name="sortActor[]" type="radio" value="years">
-                                            Descending<br></p>
+                                        <?php
+
+
+$showTableGenre="SELECT DISTINCT release_year FROM movie";
+    $movie_stmt2=$pdo->query($showTableGenre);
+    $movies2 = $movie_stmt2->fetchAll(PDO::FETCH_ASSOC);
+        foreach($movies2 as $movie2){
+            $string=$movie2['release_year'];
+            echo "<input class='form-check-input me-1' name='sortYear[]' type='checkbox' value='$string'>";
+            echo $movie2['release_year'];echo "<br>";
+        }?></p>
                                         </div><!-- section-content end -->
                                         <!-- </div>section end -->
                                         <a class="section-title" href="#accordion-1">Genre</a>
                                         <div id="accordion-1" class="section-content">
                                         <p><form method="POST" action="sort_movies.php">
-                                            <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
+<?php
+
+
+$showTableGenre="SELECT * FROM genre ORDER BY genre_name";
+    $movie_stmt2=$pdo->query($showTableGenre);
+    $movies2 = $movie_stmt2->fetchAll(PDO::FETCH_ASSOC);
+        foreach($movies2 as $movie2){
+            $string=$movie2['genre_name'];
+            echo "<input class='form-check-input me-1' name='sortGenre[]' type='checkbox' value='$string'>";
+            echo $movie2['genre_name'];echo "<br>";
+        }?>
+                                        
+                                            <!-- <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
                                             Comedy<br>
                                             <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
                                             Crime<br>
                                             <input class="form-check-input me-1" name="sortActor[]" type="checkbox" value="years">
-                                            Drama<br></p>
+                                            Drama<br></p> -->
                                         </div><!-- section-content end -->
                                         </div><!-- section end -->
                                          <input type="submit"name="submit"value="Sort"></form>  </div>
