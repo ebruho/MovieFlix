@@ -1,12 +1,11 @@
-include 'config.php'
 
 <?php
+include 'config.php';
+
 session_start();
 
 try {
-    $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    
     if (!isset($_SESSION['user_id'])) {
      die("Plese, enter in system, to add a movie to watchlist.");
     }
@@ -14,8 +13,11 @@ try {
     $user_id = $_SESSION['user_id'];
 
      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $action = $_POST['action'] ?? '';
-        $movie_id = $_POST['movie_id'] ?? null;
+        $action = isset($_POST['action']) ? $_POST['action'] : '';
+        $movie_id = isset($_POST['movie_id']) ? $_POST['movie_id'] : null;
+
+        //$action = $_POST['action'] ?? '';
+        //$movie_id = $_POST['movie_id'] ?? null;
       }
 
       if ($action === 'add_watchlist' && $movie_id) {
@@ -37,7 +39,7 @@ try {
             $update = $pdo->prepare("UPDATE watchlist SET is_watched = TRUE WHERE user_id = :user_id AND movie_id = :movie_id");
             $update->execute(['user_id' => $user_id, 'movie_id' => $movie_id]);
         }
-    }
+    
 
       
      $stmt = $pdo->prepare("
@@ -64,7 +66,7 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
 
 
 } catch (PDOException $e) {
-    echo "Грешка: " . $e->getMessage();
+    echo "Error: " . $e->getMessage();
     die();
 }
 ?>
