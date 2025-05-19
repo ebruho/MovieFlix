@@ -97,7 +97,7 @@ session_start();
                             movie_img
                         FROM movie
                         ORDER BY random()
-                        LIMIT 6 OFFSET 0
+                        LIMIT 5 OFFSET 0
 
                     ";
 

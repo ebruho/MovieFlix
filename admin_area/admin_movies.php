@@ -671,16 +671,7 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.querySelector('#edit_description').value = button.getAttribute('data-description') || '';
             //modal.querySelector('#edit_cover').value = button.getAttribute('data-cover') || '';
 
-// Показване на текущото изображение (афиш)
-const coverUrl = button.getAttribute('data-cover');
-const coverPreview = modal.querySelector('#currentCoverPreview');
 
-if (coverUrl) {
-    coverPreview.src = coverUrl;
-    coverPreview.style.display = 'block';
-} else {
-    coverPreview.style.display = 'none';
-}
 
 
 

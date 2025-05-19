@@ -35,15 +35,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Режисьор
         $director_id = null;
         if ($director_name !== '') {
-            $stmt = $pdo->prepare("SELECT director_id FROM Director WHERE director_name = ?");
-            $stmt->execute([$director_name]);
+            $stmt = $pdo->prepare("SELECT director_id FROM Director WHERE TRIM(director_name) = ?");
+            $stmt->execute([trim($director_name)]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
             if ($result) {
                 $director_id = $result['director_id'];
             } else {
                 $stmt = $pdo->prepare("INSERT INTO Director (director_name) VALUES (?)");
-                $stmt->execute([$director_name]);
+                $stmt->execute([trim($director_name)]);
                 $director_id = $pdo->lastInsertId();
             }
         }
@@ -65,15 +65,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Обновяване на филма
         $sql = "UPDATE Movie 
-                SET movie_title = ?, duration = ?, movie_description = ?, release_year = ?, 
-                    director_id = ?, language_id = ?, budget = ?, keywords = ?, movie_link = ?" . 
-                    ($imgPath ? ", movie_img = ?" : "") . "
+                SET movie_title = ?, duration = ?, movie_description = ?, release_year = ?, ".
+                ($director_id !== null ? "director_id = ?, " : "").
+                "language_id = ?, budget = ?, keywords = ?, movie_link = ?" . 
+                ($imgPath ? ", movie_img = ?" : "") . "
                 WHERE movie_id = ?";
         
         $params = [
-            $title, $duration, $description, $release_date, 
-            $director_id, $language_id, $budget, $keywords, $link
+            $title, $duration, $description, $release_date
         ];
+        if ($director_id !== null) {
+            $params[] = $director_id;
+        }
+        $params = array_merge($params, [$language_id, $budget, $keywords, $link]);
         if ($imgPath) {
             $params[] = $imgPath;
         }
