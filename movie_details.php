@@ -6,6 +6,14 @@ if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
     die("Invalid movie ID");
 }
 $movie_id = (int)$_GET['movie_id'];
+
+$stmt = $pdo->prepare("SELECT * FROM movies WHERE id = :id");
+$stmt->execute([':id' => $movieId]);
+$movie = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$movie) {
+    die('Invalid movie id');
+}
 ?>
 <?php
 session_start();
