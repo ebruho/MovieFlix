@@ -50,9 +50,9 @@ session_start();
                     <i class="fas fa-moon"></i>
                 </button>
                 <div class="search-bar">
-                    <form action="">
-                        <input type="text" placeholder="Search movies...">
-                        <button><i class="fas fa-search"></i></button>
+                    <form action="">  <!--search.php" method="GET"-->
+                        <input type="text" name="q" placeholder="Search movies...">
+                        <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
             </div>

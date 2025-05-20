@@ -3,9 +3,9 @@ include('../config.php');
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-
+    $email = trim($_POST['email'] ?? '');//$email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $password = $_POST['password'] ?? '';//$password = isset($_POST['password']) ? $_POST['password'] : '';//
+    
     // Проверка за празни полета
     if (empty($email) || empty($password)) {
         die("Please fill in all fields.");

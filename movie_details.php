@@ -6,6 +6,14 @@ if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
     die("Invalid movie ID");
 }
 $movie_id = (int)$_GET['movie_id'];
+
+$stmt = $pdo->prepare("SELECT * FROM movies WHERE id = :id");
+$stmt->execute([':id' => $movieId]);
+$movie = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$movie) {
+    die('Invalid movie id');
+}
 ?>
 <?php
 session_start();
@@ -133,9 +141,12 @@ session_start();
                         <a class="btn-primary" href="watchmovie.php?movie_id=<?= $movie_id ?>" style="text-decoration:none;">                     
                             <i class="fas fa-play"></i> Watch Now    
                         </a>
-                        <button class="btn-secondary">
+                        <form method="post" action="watchlist.php">
+                          <input type="hidden" name="movie_id" value="<?= htmlspecialchars($movie_id) ?>">
+                        <button type="submit" name="add_watchlist" class="btn-secondary">
                             <i class="fas fa-plus"></i> Add to Watchlist
                         </button>
+                        </form>
                         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ratingModal">
                             <i class="fas fa-star me-2"></i> Rate Movie
                         </button>
