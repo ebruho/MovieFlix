@@ -97,10 +97,11 @@ session_start();?>
                   <div class="row mx-0">
                     <div class="col-lg-3"><div class="accordion">
                         <div class="list-group">
-                                        <div class="section">
+                                        <div class="section"><form method="POST" action="#">
+                                            
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="#">
+                                        <p>
 <?php
 
 
@@ -113,15 +114,15 @@ $showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
             echo "<input class='form-check-input me-1' name='sortActor[]' type='checkbox' value='$string'>";
             echo $movie2['actor_name'];echo "<br>";
         }?>
-                                        </div><!-- section-content end -->
+                                        </div><input type="submit"class="my-2"name="submit"value="Filter"><!-- section-content end -->
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Name</a>
-                                        <div id="accordion-1" class="section-content">
+                                        <div id="accordion-1" class="section-content my-2">
                                         <p>
                                             <input class="form-check-input me-1" name="sortName[]" type="radio" value="A-Z">
                                             From A-Z<br>
                                             <input class="form-check-input me-1" name="sortName[]" type="radio" value="Z-A">
                                             From Z-A<br></p>
-                                        </div>
+                                        </div><input type="submit"class="my-2"name="submit"value="Sort">
                                         <!-- <a class="section-title" href="#accordion-1" style="text-decoration: none;">Rating</a>
                                         <div id="accordion-1" class="section-content">
                                         <p>
@@ -151,7 +152,7 @@ $showTableGenre="SELECT DISTINCT release_year FROM movie";
             echo "<input class='form-check-input me-1' name='sortYear[]' type='checkbox' value='$string'>";
             echo $movie2['release_year'];echo "<br>";
         }?></p>
-                                        </div><!-- section-content end -->
+                                        </div><input type="submit"class="my-2"name="submit"value="Filter"><!-- section-content end -->
                                         <!-- </div>section end -->
                                         <a class="section-title" href="#accordion-1">Genre</a>
                                         <div id="accordion-1" class="section-content">
@@ -176,7 +177,7 @@ $showTableGenre="SELECT * FROM genre ORDER BY genre_name";
                                             Drama<br></p> -->
                                         </div><!-- section-content end -->
                                         </div><!-- section end -->
-                                         <input type="submit"name="submit"value="Sort"></form> </div>
+                                         <input type="submit"name="submit"value="Filter"></form> </div>
                                         </div><!-- accordion end --></div>
                     <div class="col-lg-9"><div class="movie-grid">
 </html>
@@ -363,7 +364,7 @@ $movie_query="
             <p>&copy; 2024 MovieFlix. All rights reserved.</p>
         </div>
     </footer>
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
 </body>
 
 </html>
