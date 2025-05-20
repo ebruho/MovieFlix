@@ -211,6 +211,17 @@ session_start();
                     </div>
                 </div>
             </section>
+
+            <section class="comment">
+                <h2>Comments</h2>
+                <div class="comment-grid">
+                    <div class="comment-item">
+                        <h3>Language</h3>
+                        <p><?= htmlspecialchars($movie['language_name']) ?></p>
+                    </div>
+                    </div>
+                    </section>
+
             <?php 
                     $movie_query="
                         SELECT
