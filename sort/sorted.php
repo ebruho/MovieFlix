@@ -26,9 +26,16 @@ session_start();?>
             </div>
             <ul class="nav-links">
                 <li><a href="../index.php" class="active">Home</a></li>
-                <li><a href="sort/sort_movies.html">Movies</a></li>
-                <li><a href="#">TV Shows</a></li>
+                <li><a href="./sort/sorted.php">Movies</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="user_area/profile.php">Profile</a></li>
+                <?php else: ?>
+                <li><a href="user_area/register.php">Register</a></li>
+                <?php endif; ?>
+                <li><a href="#">Contact</a></li>
+                <?php if(isset($_SESSION['user_id'])): ?>
                 <li><a href="#">Watchlist</a></li>
+                <?php endif; ?>
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">
@@ -115,7 +122,7 @@ $showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
                                             <input class="form-check-input me-1" name="sortName[]" type="radio" value="Z-A">
                                             From Z-A<br></p>
                                         </div>
-                                        <a class="section-title" href="#accordion-1" style="text-decoration: none;">Rating</a>
+                                        <!-- <a class="section-title" href="#accordion-1" style="text-decoration: none;">Rating</a>
                                         <div id="accordion-1" class="section-content">
                                         <p>
                                             <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
@@ -128,7 +135,7 @@ $showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
                                             4 Stars<br>
                                             <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
                                             5 Stars<br></p>
-                                        </div>
+                                        </div> -->
                                         <!--</div> section end -->
                                         <a class="section-title" href="#accordion-1">Year</a>
                                         <div id="accordion-1" class="section-content">
