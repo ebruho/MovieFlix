@@ -7,8 +7,8 @@ if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
 }
 $movie_id = (int)$_GET['movie_id'];
 
-$stmt = $pdo->prepare("SELECT * FROM movies WHERE id = :id");
-$stmt->execute([':id' => $movieId]);
+$stmt = $pdo->prepare("SELECT * FROM movie WHERE movie_id = :id");
+$stmt->execute([':id' => $movie_id]);
 $movie = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$movie) {
