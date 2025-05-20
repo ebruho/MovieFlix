@@ -73,7 +73,7 @@ if (!$user) {
             <li><i class="fas fa-edit"></i> Edit Info</li>
             <li><i class="fas fa-heart"></i> Watchlist</li>
             <li><i class="fas fa-lock"></i> Change Password</li>
-            <li><i class="fas fa-sign-out-alt"></i> Logout</li>
+            <li><i class="fas fa-sign-out-alt"></i><a href="logout.php">Logout</a></li>
         </ul>
     </aside>
 

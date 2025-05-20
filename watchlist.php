@@ -45,7 +45,7 @@ try {
      $stmt = $pdo->prepare("
         SELECT m.movie_id, m.movie_title, m.movie_img, r.rating_num, m.release_year, w.is_watched
         FROM watchlist w
-        JOIN movies m ON w.movie_id = m.movie_id
+        JOIN movie m ON w.movie_id = m.movie_id
         JOIN rating r ON r.movie_id = m.movie_id
         WHERE w.user_id = :user_id
     ");
