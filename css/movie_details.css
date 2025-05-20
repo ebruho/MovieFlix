@@ -166,6 +166,18 @@ body.dark-mode .movie-content section {
     border-radius: 4px;
 }
 
+.comment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.comment-item {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    border-radius: 4px;
+}
 
 body.dark-mode .detail-item {
     background-color: rgba(255, 255, 255, 0.05);
