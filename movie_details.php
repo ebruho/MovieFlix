@@ -6,15 +6,8 @@ if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
     die("Invalid movie ID");
 }
 $movie_id = (int)$_GET['movie_id'];
-
-$stmt = $pdo->prepare("SELECT * FROM movies WHERE id = :id");
-$stmt->execute([':id' => $movieId]);
-$movie = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$movie) {
-    die('Invalid movie id');
-}
 ?>
+
 <?php
 session_start();
 
@@ -181,7 +174,7 @@ session_start();
                 <div class="cast-grid">
                     <?php foreach ($cast as $member): ?>
                     <div class="cast-member">
-                        <img src="./images/default_actor.jpg" alt="<?= htmlspecialchars($member['actor_name']) ?>">
+                        <!-- <img src="./images/default_actor.jpg" alt="<?= htmlspecialchars($member['actor_name']) ?>"> -->
                         <h3><?= htmlspecialchars($member['actor_name']) ?></h3>
                         <p><?= htmlspecialchars($member['character_name']) ?></p>
                     </div>
@@ -216,8 +209,8 @@ session_start();
                 <h2>Comments</h2>
                 <div class="comment-grid">
                     <div class="comment-item">
-                        <h3>Language</h3>
-                        <p><?= htmlspecialchars($movie['language_name']) ?></p>
+                        <!-- <h3>Language</h3>
+                        <p><?= htmlspecialchars($movie['language_name']) ?></p> -->
                     </div>
                     </div>
                     </section>
@@ -463,11 +456,11 @@ session_start();
                 <i class="far fa-star fa-2x star" data-rating="3"></i>
                 <i class="far fa-star fa-2x star" data-rating="4"></i>
                 <i class="far fa-star fa-2x star" data-rating="5"></i>
-            </div>
+            </div><form >
             <div class="rating-value mt-2">Selected Rating: <span id="ratingValue">0</span>/5</div>
             <textarea id="reviewText" placeholder="Your review (optional)..."></textarea>
             <div class="modal-buttons">
-                <button id="submitRating" class="btn gradient">Submit</button>
+                <a id="submitRating" class="btn gradient">Submit</a>
             </div>
         </div>
     </div>
