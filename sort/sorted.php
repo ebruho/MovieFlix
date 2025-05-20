@@ -25,7 +25,7 @@ session_start();?>
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="../index.html" class="active">Home</a></li>
+                <li><a href="../index.php" class="active">Home</a></li>
                 <li><a href="sort/sort_movies.html">Movies</a></li>
                 <li><a href="#">TV Shows</a></li>
                 <li><a href="#">Watchlist</a></li>
@@ -93,7 +93,7 @@ session_start();?>
                                         <div class="section">
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Actors</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sorted.php">
+                                        <p><form method="POST" action="#">
 <?php
 
 
@@ -109,7 +109,7 @@ $showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
                                         </div><!-- section-content end -->
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Name</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
+                                        <p>
                                             <input class="form-check-input me-1" name="sortName[]" type="radio" value="A-Z">
                                             From A-Z<br>
                                             <input class="form-check-input me-1" name="sortName[]" type="radio" value="Z-A">
@@ -117,7 +117,7 @@ $showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
                                         </div>
                                         <a class="section-title" href="#accordion-1" style="text-decoration: none;">Rating</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
+                                        <p>
                                             <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
                                             1 Star<br>
                                             <input class="form-check-input me-1" name="sortRating[]" type="radio" value="years">
@@ -132,7 +132,7 @@ $showTableGenre="SELECT actor_name FROM actor ORDER BY actor_name";
                                         <!--</div> section end -->
                                         <a class="section-title" href="#accordion-1">Year</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
+                                        <p>
                                         <?php
 
 
@@ -148,7 +148,7 @@ $showTableGenre="SELECT DISTINCT release_year FROM movie";
                                         <!-- </div>section end -->
                                         <a class="section-title" href="#accordion-1">Genre</a>
                                         <div id="accordion-1" class="section-content">
-                                        <p><form method="POST" action="sort_movies.php">
+                                        <p>
 <?php
 
 
@@ -169,22 +169,143 @@ $showTableGenre="SELECT * FROM genre ORDER BY genre_name";
                                             Drama<br></p> -->
                                         </div><!-- section-content end -->
                                         </div><!-- section end -->
-                                         <input type="submit"name="submit"value="Sort"></form>  </div>
+                                         <input type="submit"name="submit"value="Sort"></form> </div>
                                         </div><!-- accordion end --></div>
                     <div class="col-lg-9"><div class="movie-grid">
 </html>
 
                 <?php 
-                    $movie_query="
-                        SELECT
-                            movie_id,
-                            movie_title,
-                            movie_img
+$join="";         
+$order=""; 
+$where="";     
+if (isset($_POST['submit'])) {
+    if (isset($_POST['sortName'])) {
+        $sort=$_POST['sortName'];
+        foreach ($sort as $key => $value) {
+            if ($value=="A-Z"){
+                $order="ORDER BY movie.movie_title ASC";
+            }
+            elseif ($value=="Z-A") {
+                $order="ORDER BY movie.movie_title DESC";
+            }
+        }
+    }
+    if (isset($_POST['sortActor'])) {
+        $sort1=$_POST['sortActor'];
+        $flag=false;
+        $join=$join."INNER JOIN moviecharacter ON movie.movie_id=moviecharacter.movie_id
+        INNER JOIN actor ON moviecharacter.actor_id=actor.actor_id ";
+        if ($where!="") {
+            $where=$where." OR actor.actor_name IN(";
+            $flag=true;
+        }
+        foreach ($sort1 as $key => $value) {
+        
+        if ($flag==false) {
+           if ($where=="") {
+            $where=$where."WHERE actor.actor_name IN(";
+        }
+        else{
+            $where=$where.", ";
+        } 
+        }
+        
+        $where=$where."'$value'";
+        $flag=false;
+    }$where=$where.")";
+    }
+    if (isset($_POST['sortYear'])) {
+        $sort=$_POST['sortYear'];
+        $flag=false;
+        if ($where!="") {
+            $where=$where." OR movie.release_year IN(";
+            $flag=true;
+        }
+        foreach ($sort as $key => $value) {
+        // $join="INNER JOIN moviecharacter ON movie.movie_id=moviecharacter.movie_id
+        // INNER JOIN actor ON moviecharacter.actor_id=actor.actor_id";
+        // echo $value;
+        if ($flag==false) {
+           if ($where=="") {
+            $where=$where."WHERE movie.release_year IN(";
+        }
+        else{
+            $where=$where.", ";
+        } 
+        }
+        
+        $where=$where."'$value'";
+        $flag=false;
+    }$where=$where.")";
+    }
+    if (isset($_POST['sortGenre'])) {
+        $sort=$_POST['sortGenre'];
+        $flag=false;
+        $join=$join."INNER JOIN moviegenre ON movie.movie_id=moviegenre.movie_id
+         INNER JOIN genre ON moviegenre.genre_id=genre.genre_id ";
+        if ($where!="") {
+            $where=$where." OR genre.genre_name IN(";
+            $flag=true;
+        }
+        foreach ($sort as $key => $value) {
+        
+        // echo $value;
+        if ($flag==false) {
+           if ($where=="") {
+            $where=$where."WHERE genre.genre_name IN(";
+        }
+        else{
+            $where=$where.", ";
+        } 
+        }
+        
+        $where=$where."'$value'";
+        $flag=false;
+    }$where=$where.")";
+    }
+}
+$movie_query="
+                        SELECT DISTINCT
+                            movie.movie_id,
+                            movie.movie_title,
+                            movie.movie_img
                         FROM movie
-                        ORDER BY random()
-                        LIMIT 5 OFFSET 0
+                        $join
+                        $where
+                        $order
+                        LIMIT 8 OFFSET 0
+                    "; 
 
-                    ";
+//echo $movie_query;
+
+// $stmt = $pdo->query("SELECT  FROM ");
+//     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// // Извеждаме резултатите в HTML таблица
+//     if ($results) {
+//         echo "<table border='1'>";
+//         // Извеждаме заглавния ред (имена на колоните)
+//         echo "<tr>";
+//         foreach (array_keys($results[0]) as $column) {
+//             echo "<th>" . htmlspecialchars($column) . "</th>";
+//         }
+//         echo "</tr>";
+
+//         // Извеждаме данните
+//         foreach ($results as $row) {
+//             echo "<tr>";
+//             foreach ($row as $cell) {
+//                 echo "<td>" . htmlspecialchars($cell) . "</td>";
+//             }
+//             echo "</tr>";
+//         }
+//         echo "</table>";
+//     } else {
+//         echo "Няма намерени резултати.";
+//     }
+
+
+
 
                     $movie_stmt = $pdo->query($movie_query);
                     $movies = $movie_stmt->fetchAll(PDO::FETCH_ASSOC);
