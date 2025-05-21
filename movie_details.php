@@ -284,10 +284,22 @@ body.dark-mode .btn-secondary {
             <section class="comment">
                 <h2>Comments</h2>
                 <div class="comment-grid">
-                    <div class="comment-item">
-                        <h3>Language</h3>
-                        <p><?= htmlspecialchars($movie['language_name']) ?></p>
-                    </div>
+                    <?php
+                        $rate_sql="SELECT * FROM rating
+                        INNER JOIN movie ON rating.movie_id=movie.movie_id
+                        WHERE rating.movie_id=$movie_id";
+                        $comment_stmt = $pdo->query($rate_sql);
+                        $comment = $comment_stmt->fetchAll(PDO::FETCH_ASSOC);
+                        if($comment==null){echo "<h3>There are no comments yet</h3>";}
+                        else{
+                            echo "<div class='comment-item'></div>";
+                        }
+                        ?>
+                    
+                        
+                        <!-- 
+                        <p><?= htmlspecialchars($movie['language_name']) ?></p> -->
+                    
                     </div>
                     </section>
 
@@ -433,11 +445,11 @@ body.dark-mode .btn-secondary {
 
                 const review = reviewText.value;
                 alert(`Thanks for your ${currentRating}-star rating!`);
-                
+                return currentRating;
                 // Log or send to backend
                 console.log('Rating:', currentRating);
                 console.log('Review:', review);
-
+                
                 currentRating = 0;
                 updateStars(0);
                 ratingValue.textContent = '0';
@@ -529,18 +541,20 @@ body.dark-mode .btn-secondary {
     <div id="ratingModal" class="custom-modal">
         <div class="custom-modal-content">
             <span class="close-modal" id="closeModal">&times;</span>
-            <h2>Rate this Movie</h2>
+            <h2>Rate this Movie</h2><form method="POST" action="#">
             <div class="stars-container" id="starsContainer">
-                <i class="far fa-star fa-2x star" data-rating="1"></i>
-                <i class="far fa-star fa-2x star" data-rating="2"></i>
-                <i class="far fa-star fa-2x star" data-rating="3"></i>
-                <i class="far fa-star fa-2x star" data-rating="4"></i>
-                <i class="far fa-star fa-2x star" data-rating="5"></i>
+                <input type="hidden" id="1" value="1"><i class="far fa-star fa-2x star" data-rating="1"></i>
+                <input type="hidden" id="2" value="2"><i class="far fa-star fa-2x star" data-rating="2"></i>
+                <input type="hidden" id="rate[]" value="3"><i class="far fa-star fa-2x star" data-rating="3"></i>
+                <input type="hidden" id="rate[]" value="4"><i class="far fa-star fa-2x star" data-rating="4"></i>
+                <input type="hidden" id="rate[]" value="5"><i class="far fa-star fa-2x star" data-rating="5"></i>
             </div>
+            
             <div class="rating-value mt-2">Selected Rating: <span id="ratingValue">0</span>/5</div>
             <textarea id="reviewText" placeholder="Your review (optional)..."></textarea>
             <div class="modal-buttons">
-                <button id="submitRating" class="btn gradient">Submit</button>
+                <a id="submitRating" class="btn gradient">Submit</a>
+            </form>
             </div>
         </div>
     </div>

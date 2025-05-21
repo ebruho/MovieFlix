@@ -168,7 +168,7 @@ body.dark-mode .movie-content section {
 
 .comment-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(50rem, 1fr));
     gap: 1.5rem;
     margin-top: 1rem;
 }
@@ -177,6 +177,10 @@ body.dark-mode .movie-content section {
     background-color: rgba(0, 0, 0, 0.05);
     padding: 1rem;
     border-radius: 4px;
+}
+
+body.dark-mode .comment-item{
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 body.dark-mode .detail-item {
