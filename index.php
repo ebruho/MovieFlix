@@ -42,7 +42,7 @@ session_start();
                 <?php endif; ?>
                 <li><a href="#">Contact</a></li>
                 <?php if(isset($_SESSION['user_id'])): ?>
-                <li><a href="#">Watchlist</a></li>
+                <li><a href="./watchlist.php">Watchlist</a></li>
                 <?php endif; ?>
             </ul>
             <div class="nav-actions">

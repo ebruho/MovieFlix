@@ -39,10 +39,10 @@ if (!$user) {
             </div>
             <ul class="nav-links">
                 <li><a href="../index.php">Home</a></li>
-                <li><a href="#">Movies</a></li>
+                <li><a href="../sort/sorted.php">Movies</a></li>
                 <li><a href="./profile.php">Profile</a></li>
                 <li><a href="#">Contact</a></li>
-                <li><a href="#">Watchlist</a></li>
+                <li><a href="../watchlist.php">Watchlist</a></li>
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">
@@ -73,7 +73,7 @@ if (!$user) {
             <li><i class="fas fa-edit"></i> Edit Info</li>
             <li><i class="fas fa-heart"></i> Watchlist</li>
             <li><i class="fas fa-lock"></i> Change Password</li>
-            <li><i class="fas fa-sign-out-alt"></i> Logout</li>
+            <li><a href="./logout.php" style="text-decoration:none; color:white;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
 

@@ -1,6 +1,14 @@
 <?php
+session_start();
 
 require 'config.php';
+
+include 'common_functions/functions.php';
+
+
+
+ add_watchlist();
+
 
 if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
     die("Invalid movie ID");
@@ -8,7 +16,10 @@ if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
 $movie_id = (int)$_GET['movie_id'];
 ?>
 <?php
-session_start();
+
+
+   
+   
 
 ?>
 
@@ -22,6 +33,22 @@ session_start();
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./css/watchmovie.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .watchlist-message {
+    background-color: #f0f0f0;
+    color: #222;
+    border: 1px solid #444;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+}
+    body.dark-mode .watchlist-message {
+    background-color: #222;
+    color: #f0f0f0;
+}
+    </style>
 </head>
 
 <body class="dark-mode">
@@ -41,7 +68,7 @@ session_start();
                 <?php endif; ?>
                 <li><a href="#">Contact</a></li>
                 <?php if(isset($_SESSION['user_id'])): ?>
-                <li><a href="#">Watchlist</a></li>
+                <li><a href="./watchlist.php">Watchlist</a></li>
                 <?php endif; ?>            </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">
@@ -84,7 +111,15 @@ session_start();
         ?>
     <!-- Main Content -->
     <main class="watch-container">
-        <div class="video-section">
+                    <!-- Messages -->
+             <?php if (isset($_SESSION['watchlist_message'])): ?>
+            <div class="watchlist-message">
+            <?= htmlspecialchars($_SESSION['watchlist_message']) ?>
+            </div>
+            <?php unset($_SESSION['watchlist_message']); ?>
+            <?php endif; ?>
+            
+            <div class="video-section">
             <div class="video-player">
                
 
@@ -96,39 +131,7 @@ session_start();
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 ></iframe>
                 
-                <!-- Custom Video Controls -->
-                <!-- <div class="video-controls">
-                    <div class="progress-container">
-                        <div class="progress-bar">
-                            <div class="progress"></div>
-                        </div>
-                        <div class="time-display">
-                            <span class="current-time">0:00</span>
-                            <span>/</span>
-                            <span class="total-time">2:30:00</span>
-                        </div>
-                    </div>
-                    <div class="controls-main">
-                        <div class="controls-left">
-                            <button class="play-pause">
-                                <i class="fas fa-play"></i>
-                            </button>
-                            <button class="volume">
-                                <i class="fas fa-volume-up"></i>
-                            </button>
-                            <input type="range" class="volume-slider" min="0" max="100" value="100">
-                        </div>
-                        <div class="controls-right">
-                            <button class="quality">
-                                <span>1080p</span>
-                                <i class="fas fa-cog"></i>
-                            </button>
-                            <button class="fullscreen">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
+               
             </div>
         </div>
 
@@ -147,17 +150,26 @@ session_start();
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn-primary">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <a class="btn-primary" style="text-decoration:none; margin: 10px;" href="watchmovie.php?add_watchlist=<?= $movie_id ?>">
                         <i class="fas fa-plus"></i> Add to Watchlist
-                    </button>
+                    </a>
+                    <?php else: ?>
+                    <a class="btn-primary" style="text-decoration:none; margin: 10px;" href="user_area/login.php">
+                        <i class="fas fa-plus"></i> Add to Watchlist
+                    </a>
+                    <?php endif; ?>
                     <!-- <button class="btn-secondary">
                         <i class="fas fa-share"></i> Share
                     </button> -->
-                    <button class="btn-secondary">
+                    <a class="btn btn-secondary" style="text-decoration:none;" href="movie_details.php?movie_id=<?= $movie_id ?>">
                         <i class="fa-solid fa-arrow-left"></i> Back
-                    </button>
+                    </a>
                 </div>
             </div>
+
+
+
 
             <div class="tabs-container">
                 <div class="tabs">
@@ -172,29 +184,29 @@ session_start();
                         <p><?= $movie['movie_description']?></p>
                         
                         <h3>Cast & Crew</h3>
-<?php
-$cast_sql = "
-    SELECT a.actor_name, ch.character_name
-    FROM moviecharacter ch
-    JOIN actor a ON ch.actor_id = a.actor_id
-    WHERE ch.movie_id = ?";
+                        <?php
+                        $cast_sql = "
+                            SELECT a.actor_name, ch.character_name
+                            FROM moviecharacter ch
+                            JOIN actor a ON ch.actor_id = a.actor_id
+                            WHERE ch.movie_id = ?";
 
-$cast_stmt = $pdo->prepare($cast_sql);
-$cast_stmt->execute([$movie_id]);
-$cast = $cast_stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+                            $cast_stmt = $pdo->prepare($cast_sql);
+                            $cast_stmt->execute([$movie_id]);
+                            $cast = $cast_stmt->fetchAll(PDO::FETCH_ASSOC);
+                            ?>
 
-<div class="cast-list">
-    <?php foreach ($cast as $member): ?>
-        <div class="cast-member">
-            <img src="./images/default_actor.jpg" alt="<?= htmlspecialchars($member['actor_name']) ?>">
-            <div class="cast-info">
-                <h4>Actor Name: <?= htmlspecialchars($member['actor_name']) ?></h4>
-                <p>Character Name: <?= htmlspecialchars($member['character_name']) ?></p>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
+                            <div class="cast-list">
+                                <?php foreach ($cast as $member): ?>
+                                    <div class="cast-member">
+                                        <!-- <img src="./images/default_actor.jpg" alt="<?= htmlspecialchars($member['actor_name']) ?>"> -->
+                                        <div class="cast-info">
+                                            <h4>Actor Name: <?= htmlspecialchars($member['actor_name']) ?></h4>
+                                            <p>Character Name: <?= htmlspecialchars($member['character_name']) ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
 
                             <!-- More cast members -->
                         </div>
@@ -203,18 +215,7 @@ $cast = $cast_stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <!-- <div class="next-up">
-            <h3>Next Up</h3>
-            <div class="next-episodes">
-                <div class="episode-card">
-                    <img src="https://via.placeholder.com/160x90" alt="Next Episode">
-                    <div class="episode-info">
-                        <h4>Next Movie Title</h4>
-                        <p>Brief description of the next movie</p>
-                    </div>
-                </div>
-            </div>
-        </div> -->
+      
     </main>
 
     <!-- Footer -->

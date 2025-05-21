@@ -1,27 +1,19 @@
 <?php
 
+ session_start();
+// Проверка дали потребителят е влязъл в системата
 require 'config.php';
+
+include 'common_functions/functions.php';
+
+add_watchlist_details();
+// Проверка дали е зададен ID на филма и дали е валиден
 
 if (!isset($_GET['movie_id']) || !is_numeric($_GET['movie_id'])) {
     die("Invalid movie ID");
 }
 $movie_id = (int)$_GET['movie_id'];
-
-$stmt = $pdo->prepare("SELECT * FROM movies WHERE id = :id");
-$stmt->execute([':id' => $movieId]);
-$movie = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$movie) {
-    die('Invalid movie id');
-}
 ?>
-<?php
-session_start();
-
-
-
-?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,6 +26,64 @@ session_start();
     <link rel="stylesheet" href="./css/movie_details.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <style>
+                .watchlist-message {
+    background-color: #f0f0f0;
+    color: #222;
+    border: 1px solid #444;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+}
+    body.dark-mode .watchlist-message {
+    background-color: #222;
+    color: #f0f0f0;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-dark);
+    text-decoration: none;
+}
+
+body.dark-mode .btn-secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+}
+
+.btn-warning{
+    padding: 1rem;
+    background-color: gold;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+.back-btn{
+    color: #e50914;background: rgba(229, 9, 20, 0.2);
+
+}
+    </style>
 
 </head>
 
@@ -54,7 +104,7 @@ session_start();
                 <?php endif; ?>
                 <li><a href="#">Contact</a></li>
                 <?php if(isset($_SESSION['user_id'])): ?>
-                <li><a href="#">Watchlist</a></li>
+                <li><a href="./watchlist.php">Watchlist</a></li>
                 <?php endif; ?>
             </ul>
             <div class="nav-actions">
@@ -81,6 +131,13 @@ session_start();
     
     <!-- Main Content -->
     <main class="movie-details">
+            <!-- Messages -->
+             <?php if (isset($_SESSION['watchlist_message'])): ?>
+            <div class="watchlist-message">
+            <?= htmlspecialchars($_SESSION['watchlist_message']) ?>
+            </div>
+            <?php unset($_SESSION['watchlist_message']); ?>
+            <?php endif; ?>
         <?php 
             $sql_query = "SELECT 
                 m.movie_title,
@@ -141,18 +198,30 @@ session_start();
                         <a class="btn-primary" href="watchmovie.php?movie_id=<?= $movie_id ?>" style="text-decoration:none;">                     
                             <i class="fas fa-play"></i> Watch Now    
                         </a>
-                        <form method="post" action="watchlist.php">
-                          <input type="hidden" name="movie_id" value="<?= htmlspecialchars($movie_id) ?>">
-                        <button type="submit" name="add_watchlist" class="btn-secondary">
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                        <a name="add_watchlist" class="btn-secondary" href="movie_details.php?add_watchlist=<?= $movie_id ?>" style="text-decoration:none;">
                             <i class="fas fa-plus"></i> Add to Watchlist
-                        </button>
-                        </form>
-                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ratingModal">
-                            <i class="fas fa-star me-2"></i> Rate Movie
-                        </button>
-                        <button class="btn-secondary back-btn" >
+                        </a>
+                        <?php else: ?>
+                        <a class="btn-secondary" href="user_area/login.php" style="text-decoration:none;">
+                            <i class="fas fa-plus"></i> Add to Watchlist
+                        </a>
+                        <?php endif; ?>
+
+                      
+<?php if (isset($_SESSION['user_id'])): ?>
+    <button class="btn btn-warning" id="openRatingModal">
+        <i class="fas fa-star me-2"></i> Rate Movie
+    </button>
+<?php else: ?>
+    <a class="btn btn-warning" href="./user_area/login.php" style="text-decoration:none; color:black;">
+        <i class="fas fa-star me-2"></i> Rate Movie
+    </a>
+<?php endif; ?>
+
+                        <a class="btn-secondary back-btn" href="index.php" style="text-decoration:none;">
                             <i class="fa-solid fa-arrow-left"></i> Back
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -181,7 +250,7 @@ session_start();
                 <div class="cast-grid">
                     <?php foreach ($cast as $member): ?>
                     <div class="cast-member">
-                        <img src="./images/default_actor.jpg" alt="<?= htmlspecialchars($member['actor_name']) ?>">
+                        <!-- <img src="./images/default_actor.jpg" alt="<?= htmlspecialchars($member['actor_name']) ?>"> -->
                         <h3><?= htmlspecialchars($member['actor_name']) ?></h3>
                         <p><?= htmlspecialchars($member['character_name']) ?></p>
                     </div>
@@ -323,7 +392,7 @@ session_start();
 
             // Rating Modal Logic
             const modal = document.getElementById('ratingModal');
-            const openBtn = document.querySelector('.btn.btn-warning'); // Бутонът за отваряне на модала
+            const openBtn = document.getElementById('openRatingModal'); // Използвай само тази дефиниция
             const closeBtn = document.getElementById('closeModal');
             const submitBtn = document.getElementById('submitRating');
             const starsContainer = document.getElementById('starsContainer');
@@ -333,10 +402,14 @@ session_start();
             let currentRating = 0;
 
             // Open modal
-            openBtn.addEventListener('click', () => {
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            });
+            if (openBtn) {
+                openBtn.addEventListener('click', function () {
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+
 
             // Close modal
             function closeModal() {

@@ -24,17 +24,17 @@ session_start();?>
             <div class="logo">
                 <h1>MovieFlix</h1>
             </div>
-            <ul class="nav-links">
-                <li><a href="../index.php" class="active">Home</a></li>
-                <li><a href="./sort/sorted.php">Movies</a></li>
+                       <ul class="nav-links">
+                <li><a href="../index.php">Home</a></li>
+                <li><a href="../sort/sorted.php" class="active">Movies</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
-                <li><a href="user_area/profile.php">Profile</a></li>
+                <li><a href="../user_area/profile.php">Profile</a></li>
                 <?php else: ?>
-                <li><a href="user_area/register.php">Register</a></li>
+                <li><a href="../user_area/register.php">Register</a></li>
                 <?php endif; ?>
                 <li><a href="#">Contact</a></li>
                 <?php if(isset($_SESSION['user_id'])): ?>
-                <li><a href="#">Watchlist</a></li>
+                <li><a href="../watchlist.php">Watchlist</a></li>
                 <?php endif; ?>
             </ul>
             <div class="nav-actions">

@@ -1,76 +1,13 @@
-
 <?php
-include 'config.php';
-
 session_start();
 
-try {
-    
-    if (!isset($_SESSION['user_id'])) {
-     die("Plese, enter in system, to add a movie to watchlist.");
-    }
+require 'config.php';
+include 'common_functions/functions.php';
+mark_as_watched();
+unmark_as_watched();
+remove_watchlist();
 
-    $user_id = $_SESSION['user_id'];
-
-     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $action = isset($_POST['action']) ? $_POST['action'] : '';
-        $movie_id = isset($_POST['movie_id']) ? $_POST['movie_id'] : null;
-
-        //$action = $_POST['action'] ?? '';
-        //$movie_id = $_POST['movie_id'] ?? null;
-      }
-
-      if ($action === 'add_watchlist' && $movie_id) {
-            $check = $pdo->prepare("SELECT * FROM watchlist WHERE user_id = :user_id AND movie_id = :movie_id");
-            $check->execute(['user_id' => $user_id, 'movie_id' => $movie_id]);
-
-            if ($check->rowCount() === 0) {
-                $insert = $pdo->prepare("INSERT INTO watchlist (movie_id, user_id,) VALUES (:movie_id, :user_id,NOW(),FALSE)");
-                $insert->execute(['user_id' => $user_id, 'movie_id' => $movie_id]);
-            }
-        }
-
-        if ($action === 'remove' && $movie_id) {
-            $delete = $pdo->prepare("DELETE FROM watchlist WHERE user_id = :user_id AND movie_id = :movie_id");
-            $delete->execute(['user_id' => $user_id, 'movie_id' => $movie_id]);
-        }
-
-        if ($action === 'mark_watched' && $movie_id) {
-            $update = $pdo->prepare("UPDATE watchlist SET is_watched = TRUE WHERE user_id = :user_id AND movie_id = :movie_id");
-            $update->execute(['user_id' => $user_id, 'movie_id' => $movie_id]);
-        }
-    
-
-      
-     $stmt = $pdo->prepare("
-        SELECT m.movie_id, m.movie_title, m.movie_img, r.rating_num, m.release_year, w.is_watched
-        FROM watchlist w
-        JOIN movies m ON w.movie_id = m.movie_id
-        JOIN rating r ON r.movie_id = m.movie_id
-        WHERE w.user_id = :user_id
-    ");
-    $stmt->execute(['user_id' => $user_id]);
-    $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Статистика
-   $statsStmt = $pdo->prepare("
-    SELECT
-        COUNT(*) AS total,
-        COUNT(*) FILTER (WHERE is_watched = TRUE) AS watched,
-        COUNT(*) FILTER (WHERE is_watched = FALSE) AS to_watch
-    FROM watchlist
-    WHERE user_id = :user_id
-");
-$statsStmt->execute(['user_id' => $user_id]);
-$stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
-
-
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-    die();
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,11 +28,17 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
                 <h1>MovieFlix</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">Movies</a></li>
-                <li><a href="#">Register</a></li>
+                <li><a href="./index.php" >Home</a></li>
+                <li><a href="./sort/sorted.php">Movies</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="user_area/profile.php">Profile</a></li>
+                <?php else: ?>
+                <li><a href="user_area/register.php">Register</a></li>
+                <?php endif; ?>
                 <li><a href="#">Contact</a></li>
-                <li><a href="#">Watchlist</a></li>
+                <?php if(isset($_SESSION['user_id'])): ?>
+                <li><a href="./watchlist.php" class="active">Watchlist</a></li>
+                <?php endif; ?>
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle">
@@ -109,7 +52,11 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
                 </div>
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Login</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="./user_area/logout.php">Logout</a></li>
+                <?php else: ?>
+                <li><a href="./user_area/login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>
@@ -132,64 +79,105 @@ $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
             </div>
         </div>
 
+        <?php 
+$user_id = $_SESSION['user_id'];
+
+// Общо филми
+$total_movies_query = "SELECT COUNT(*) as total FROM watchlist WHERE user_id = ?";
+$stmt_total = $pdo->prepare($total_movies_query);
+$stmt_total->execute([$user_id]);
+$total_movies = $stmt_total->fetch(PDO::FETCH_ASSOC);
+
+// Гледани филми
+$watched_query = "SELECT COUNT(*) as watched FROM watchlist WHERE user_id = ? AND is_watched = '1'";
+$stmt_watched = $pdo->prepare($watched_query);
+$stmt_watched->execute([$user_id]);
+$watched_movies = $stmt_watched->fetch(PDO::FETCH_ASSOC);
+
+// За гледане
+$to_watch_query = "SELECT COUNT(*) as to_watch FROM watchlist WHERE user_id = ? AND is_watched = '0'";
+$stmt_to_watch = $pdo->prepare($to_watch_query);
+$stmt_to_watch->execute([$user_id]);
+$to_watch_movies = $stmt_to_watch->fetch(PDO::FETCH_ASSOC);
+?>
+
         <div class="watchlist-stats">
             <div class="stat-item">
-                <span class="stat-number"><?= $stats['total'] ?></span>
+
+                <span class="stat-number"><?php echo $total_movies['total']; ?></span>
                 <span class="stat-label">Total Movies</span>
             </div>
             <div class="stat-item">
-                <span class="stat-number"><?= $stats['watched'] ?></span>
+                <span class="stat-number"><?= $watched_movies['watched'] ?></span>
                 <span class="stat-label">Watched</span>
             </div>
             <div class="stat-item">
-                <span class="stat-number"><?= $stats['to_watch'] ?></span>
+                <span class="stat-number"><?= $to_watch_movies['to_watch'] ?></span>
                 <span class="stat-label">To Watch</span>
             </div>
         </div>
 
-     <div class="watchlist-grid">
-       <?php foreach ($movies as $movie): ?>
-        <div class="watchlist-item <?= $movie['is_watched'] ? 'watched' : '' ?>">
-            <div class="watchlist-item-poster">
-                <img src="<?= htmlspecialchars($movie['movie_img']) ?>" alt="<?= htmlspecialchars($movie['movie_title']) ?>">
-                <div class="watchlist-item-actions">
-                    <!-- Play button -->
-                    <button class="btn-watch"><i class="fas fa-play"></i></button>
-
-                    <!-- Remove -->
-                    <form method="POST" action="watchlist.php" style="display:inline;">
-                        <input type="hidden" name="action" value="remove">
-                        <input type="hidden" name="movie_id" value="<?= $movie['movie_id'] ?>">
-                        <button class="btn-remove" type="submit"><i class="fas fa-trash"></i></button>
-                    </form>
-
-                    <!-- Mark as watched -->
-                    <?php if (!$movie['is_watched']): ?>
-                        <form method="POST" action="watchlist.php" style="display:inline;">
-                            <input type="hidden" name="action" value="mark_watched">
-                            <input type="hidden" name="movie_id" value="<?= $movie['movie_id'] ?>">
-                            <button class="btn-mark-watched" type="submit"><i class="fas fa-check"></i></button>
-                        </form>
-                    <?php endif; ?>
+        <?php 
+        // Fetch watchlist items from the database
+        $user_id = $_SESSION['user_id'];
+        $watchlist_query = "SELECT 
+                m.movie_id, 
+                m.movie_title,
+                m.movie_img,
+                m.release_year,
+                m.duration, 
+                w.added_date,
+                w.is_watched 
+                FROM watchlist w 
+                JOIN movie m ON w.movie_id = m.movie_id 
+                WHERE w.user_id = ?";
+        $stmt = $pdo->prepare($watchlist_query);
+        $stmt->execute([$user_id]);
+        ?>
+        <div class="watchlist-grid">
+            <!-- Watchlist Item -->
+            <?php 
+            $has_items = false;
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): 
+                $has_items = true;
+            ?>
+            <div class="watchlist-item">
+                <div class="watchlist-item-poster">
+                    <img src="./admin_area/uploads/<?php echo htmlspecialchars($row['movie_img']); ?>" alt="<?php echo htmlspecialchars($row['movie_title']); ?>">
+                    <div class="watchlist-item-actions">
+                        <button class="btn-watch"><a href="./movie_details.php?movie_id=<?php echo htmlspecialchars($row['movie_id']); ?>" style="color:white;"><i class="fas fa-play"></i></a></button>
+                        <button class="btn-remove"><a href="watchlist.php?remove_watchlist=<?= htmlspecialchars($row['movie_id']) ?>"><i class="fas fa-trash" style="color:white;"></i></a></button>
+                        <?php if($row['is_watched'] == '0'): ?>
+                        <button class="btn-mark-watched" title="Mark as watched"><a href="watchlist.php?mark_as_watched=<?= htmlspecialchars($row['movie_id']) ?>" style="color:white;"><i class="fas fa-check"></i></a></button>
+                        <?php else: ?>
+                        <button class="btn-mark-watched" title="Unmark as watched"><a href="watchlist.php?unmark_as_watched=<?= htmlspecialchars($row['movie_id']) ?>" style="color:white;"><i class="fas fa-x" style="color:white;"></i></a></button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="watchlist-item-info">
+                    <h3><?php echo htmlspecialchars($row['movie_title']) ?></h3>
+                    <div class="movie-meta">
+                        <span class="rating"><i class="fas fa-star"></i> 4.5</span>
+                        <span class="year"><?php echo htmlspecialchars($row['release_year']) ?></span>
+                    </div>
+                
                 </div>
             </div>
-            <div class="watchlist-item-info">
-                <h3><?= htmlspecialchars($movie['movie_title']) ?></h3>
-                <div class="movie-meta">
-                    <span class="rating"><i class="fas fa-star"></i> <?= htmlspecialchars($movie['rating_num']) ?></span>
-                    <span class="year"><?= htmlspecialchars($movie['release_year']) ?></span>
-                </div>
-            </div>
+                <?php endwhile; ?>
         </div>
-    <?php endforeach; ?>
-   </div>
 
- <div class="empty-watchlist" style="display: none;">
+        <?php if (!$has_items): ?>
+        <div class="empty-watchlist">
             <i class="fas fa-film"></i>
             <h3>Your watchlist is empty</h3>
             <p>Start adding movies and shows you want to watch!</p>
-            <a href="index.html" class="btn-primary">Browse Movies</a>
+            <a href="index.php" class="btn-primary" style="color:#e50914;">Browse Movies</a>
         </div>
+        <?php endif; ?>
+
+
+
+
     </main>
 
     <!-- Footer -->
